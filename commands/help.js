@@ -1,4 +1,17 @@
+const Discord = require('discord.js');
+
 const { prefix } = require('../config.json').commands;
+
+// Agregar comandos en la descripción del Embed
+function addDescription(commands) {
+    let desc = "";
+
+    commands.forEach(c => {
+        desc += `**${prefix}${c.name}** - ${c.description}\n`;
+    });
+
+    return desc;
+};
 
 module.exports = {
     name: 'help',
@@ -6,23 +19,23 @@ module.exports = {
     aliases: ['commands'],
     usage: '[nombre del comando]',
     execute (message, args) {
-        // Información para enviar
-        const data = [];
-
         // Obtener la Collection
         const { commands } = message.client;
 
         // Si no hay args
         if (!args.length) {
-            // Agregar título
-            data.push(`Lista de comandos`);
-            // Agregar comandos
-            data.push(commands.map(command => command.name).join(', '));
-            // Agregar información
-            data.push(`\nPuedes usar \`${prefix}help [nombre del comando]\` para obtener ayuda!`);
+            // Embed
+            let embed = new Discord.MessageEmbed()
+                .setColor(process.env.COLOR)
+                .setTitle('Lista de comandos')
+                .setAuthor(message.client.user.username, message.client.user.displayAvatarURL())
+                .setFooter(`¡Puedes usar "${prefix}help [nombre del comando]" para obtener ayuda!`);
+            
+            // Agregar comandos al Embed
+            embed.setDescription(addDescription(commands));
 
             // Responder
-            return message.channel.send(data, { split: true });
+            return message.channel.send({ embed });
         }
 
         // Buscar por comando
@@ -32,13 +45,19 @@ module.exports = {
         // Si no se encuentra
         if (!command) return message.reply(`no se encontró el comando \`${name}\`!`);
 
+        let embed = new Discord.MessageEmbed()
+            .setColor(process.env.COLOR)
+            .setTitle(command.name.charAt(0).toUpperCase() + command.name.slice(1))
+            .setAuthor(message.client.user.username, message.client.user.displayAvatarURL())
+            .setFooter(`¡Puedes usar "${prefix}help" para obtener ayuda!`);
+
         // Comprobar campos del comando
-        if (command.roles) data.push(`**Permisos:** ${command.roles.join(', ')}`);
-        if (command.aliases) data.push(`**Alias:** ${command.aliases.join(', ')}`);
-        if (command.description) data.push(`**Descripción:** ${command.description}`);
-        if (command.usage) data.push(`**Uso:** ${prefix}${command.name} ${command.usage}`);
+        if (command.roles) embed.addField('Permisos', command.roles.join(', '));
+        if (command.aliases) embed.addField('Alternativas', command.aliases.join(', '));
+        if (command.description) embed.addField('Descripción', command.description);
+        if (command.usage) embed.addField('Ejemplo', `${prefix}${command.name} ${command.usage}`);
 
         // Responder
-        message.channel.send(data, { split: true });
+        message.channel.send({ embed });
     }
-}
+};
