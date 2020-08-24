@@ -20,16 +20,17 @@ function generateTemporalTimer(toMs) {
 async function commandList(message) {
     const reminds = await Remind.find({ userID: message.author.id });
     const list = [];
+    let index = 1;
 
     // Mensaje
-    reminds.map((r, i) => {
+    reminds.map((r) => {
         let getDate = r.date;
         let toMs = moment(getDate).valueOf() - moment().valueOf();
 
         if (toMs <= 0) return;
 
         // Agregar
-        let id = i + 1;
+        let id = index++; // index + 1
         let timeFromNow = moment(r.date).fromNow();
         let timeDetailed = moment(r.date).calendar();
         let toPush = `${id} - ${timeDetailed} (${timeFromNow})`
@@ -59,7 +60,7 @@ module.exports = {
         if (args[0] === "list") return commandList(message);
 
         // Si no hay args mostrar ejemplo
-        if (!args || !args.length) return message.reply(`ejemplo de uso: ${process.env.PREFIX}${this.name} ${this.usage}`);
+        if (!args || args.length <= 0) return message.reply(`ejemplo de uso: ${process.env.PREFIX}${this.name} ${this.usage}`);
 
         // Obtener Datos del mensaje
         const msg = args.join(' ').split('|'); // 3d | hello
