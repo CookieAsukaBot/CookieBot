@@ -28,3 +28,9 @@ require('./events/message')(bot, config);
 
 // Login
 require('./events/login')(bot, config);
+
+// Reminders
+require('./events/reminders')(bot);
+
+// Plugins
+// require('./plugins/index')(bot);
