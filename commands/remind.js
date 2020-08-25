@@ -67,6 +67,8 @@ module.exports = {
         const getDate = msg[0].toString(); // 3d
         const getMessage = msg[1].toString(); // hello
 
+        if (!getMessage || getMessage.length <= 0) return message.reply(`ejemplo de uso: ${process.env.PREFIX}${this.name} ${this.usage}`);
+
         // Convertir a fecha
         const actualDate = moment();
         let getDateInfo = 0;
