@@ -11,10 +11,12 @@ async function setTimers(reminds, bot) {
         let toMs = moment(getDate).valueOf() - moment().valueOf();
 
         if (toMs <= 0) return;
-    
+        if (toMs > 2147483647) return; // tenmporal fix | 24.85 días es el límite
+
         setTimeout(async () => {
             // Recordar
             let guild = await bot.guilds.cache.find(g => g.id === rm.guild);
+            if (!guild || guild.length == 0) return;
             let channel = await guild.channels.cache.find(c => c.id === rm.channel);
 
             let ping = `<@${rm.userID}>`;
