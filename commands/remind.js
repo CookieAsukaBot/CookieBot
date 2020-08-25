@@ -4,7 +4,7 @@ moment.locale('es');
 
 const Remind = require('../database/models/Remind');
 
-function generateTemporalTimer(toMs) {
+function generateTemporalTimer(toMs, message, remind) {
     setTimeout(() => {
         let embed = new Discord.MessageEmbed()
             .setColor(process.env.COLOR)
@@ -123,6 +123,6 @@ module.exports = {
 
         // Crear timer
         let toMs = moment(remind.date).valueOf() - moment().valueOf();
-        generateTemporalTimer(toMs);
+        generateTemporalTimer(toMs, message, remind);
 	}
 };
