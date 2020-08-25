@@ -1,6 +1,6 @@
 module.exports = (bot, config) => {
     // Configuración
-    const { prefix } = config.commands;
+    const prefix = process.env.BOT_PREFIX;
 
     // Obtener permisos
     const adminPermissions = config.commands.permissions.admin;

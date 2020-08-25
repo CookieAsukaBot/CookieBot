@@ -1,7 +1,4 @@
-module.exports = (bot, config) => {
-    // Obtener Token desde el config
-    const { token } = config.bot;
-
+module.exports = (bot) => {
     // Iniciar sesión
-    bot.login(token);
+    bot.login(process.env.BOT_TOKEN);
 }

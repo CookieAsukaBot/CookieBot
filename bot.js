@@ -18,7 +18,7 @@ const commandPath = path.join(__dirname, 'commands');
 require('./events/commands')(bot, commandPath);
 
 // Ready
-require('./events/ready')(bot, config);
+require('./events/ready')(bot);
 
 // guildAddMember / guildRemoveMember
 // require('./events/guildMember')(bot);
@@ -27,7 +27,7 @@ require('./events/ready')(bot, config);
 require('./events/message')(bot, config);
 
 // Login
-require('./events/login')(bot, config);
+require('./events/login')(bot);
 
 // Reminders
 require('./events/reminders')(bot);

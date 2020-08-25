@@ -7,7 +7,7 @@ const Remind = require('../database/models/Remind');
 function generateTemporalTimer(toMs, message, remind) {
     setTimeout(() => {
         let embed = new Discord.MessageEmbed()
-            .setColor(process.env.COLOR)
+            .setColor(process.env.BOT_COLOR)
             .setAuthor('Recordatorio', message.author.displayAvatarURL())
             .setFooter(`¡Gracias por usar nuestro servici🍪!`)
             .setDescription(`${remind.message}`);
@@ -42,7 +42,7 @@ async function commandList(message) {
 
     // Responder
     let embed = new Discord.MessageEmbed()
-        .setColor(process.env.COLOR)
+        .setColor(process.env.BOT_COLOR)
         .setAuthor(`Lista de recordatorios para ${message.author.tag}`, message.author.displayAvatarURL())
         .setFooter(`¡Gracias por usar nuestro servici🍪!`)
         .setDescription(list);
@@ -112,7 +112,7 @@ module.exports = {
 
         // Responder
         let embed = new Discord.MessageEmbed()
-            .setColor(process.env.COLOR)
+            .setColor(process.env.BOT_COLOR)
             // .setTitle('Recordatorio')
             .setAuthor(`Recordatorio para ${message.author.tag}`, message.author.displayAvatarURL()) // message.author.tag
             // .setFooter(`¡Gracias por usar nuestro servici🍪!`)
