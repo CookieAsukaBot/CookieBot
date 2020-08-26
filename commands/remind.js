@@ -61,18 +61,21 @@ module.exports = {
     aliases: ['remindme', 'rm', 'reminder', 'recordar'],
     usage: '1 (m, h, d, s) | [mensaje]',
 	async execute (message, args) {
-        // Comando List
-        if (args[0] === "list") return commandList(message);
-
         // Si no hay args mostrar ejemplo
-        if (!args || args.length <= 0) return message.reply(`ejemplo de uso: ${process.env.PREFIX}${this.name} ${this.usage}`);
+        if (!args || args.length <= 0) return message.reply(`ejemplo de uso: ${process.env.BOT_PREFIX}${this.name} ${this.usage}`);
+
+        // Comando List
+        if (args[0].toLowerCase() === "list") return commandList(message);
+
+        // Comprobar si el comando es válido
+        if (!args.join(' ').split('|')[0] || !args.join(' ').split('|')[1]) return message.reply(`ejemplo de uso: ${process.env.BOT_PREFIX}${this.name} ${this.usage}`);
 
         // Obtener Datos del mensaje
         const msg = args.join(' ').split('|'); // 3d | hello
         const getDate = msg[0].toString(); // 3d
         const getMessage = msg[1].toString(); // hello
 
-        if (!getMessage || getMessage.length <= 0) return message.reply(`ejemplo de uso: ${process.env.PREFIX}${this.name} ${this.usage}`);
+        if (!getMessage || getMessage.length <= 0) return message.reply(`ejemplo de uso: ${process.env.BOT_PREFIX}${this.name} ${this.usage}`);
 
         // Convertir a fecha
         const actualDate = moment();
