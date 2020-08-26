@@ -28,9 +28,12 @@ const remindSchema = new Schema({
     date: {
         type: Date,
         required: true
-    }
-    // Is reminded?
-    // Type Bool
+    },
+    isReminded: {
+        type: Boolean,
+        default: false,
+        required: true
+    },
 }, {
     timestamps: true
 });

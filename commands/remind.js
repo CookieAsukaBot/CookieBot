@@ -5,15 +5,20 @@ moment.locale('es');
 const Remind = require('../database/models/Remind');
 
 function generateTemporalTimer(toMs, message, remind) {
-    setTimeout(() => {
+    setTimeout(async () => {
         let embed = new Discord.MessageEmbed()
             .setColor(process.env.BOT_COLOR)
             .setAuthor('Recordatorio', message.author.displayAvatarURL())
             .setFooter(`¡Gracias por usar nuestro servici🍪!`)
             .setDescription(`${remind.message}`);
 
+        // Actualizar
+        await Remind.updateOne({ _id: remind._id }, {
+            isReminded: true
+        });
+
+        // Responder
         message.reply({ embed });
-        // Eliminar / Actualizar?
     }, toMs);
 };
 

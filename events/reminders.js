@@ -10,8 +10,10 @@ async function setTimers(reminds, bot) {
         let getDate = rm.date;
         let toMs = moment(getDate).valueOf() - moment().valueOf();
 
-        if (toMs <= 0) return;
+        // Actualizar versión
+        if (rm.isReminded) return;
         if (toMs > 2147483647) return; // tenmporal fix | 24.85 días es el límite
+        if (toMs <= 0) toMs = 1000;
 
         setTimeout(async () => {
             // Recordar
@@ -28,9 +30,13 @@ async function setTimers(reminds, bot) {
                 .setFooter(`¡Gracias por usar nuestro servici🍪!`)
                 .setDescription(`${rm.message}`);
 
-            channel.send(`${ping}`, { embed });
             // Actualizar
-            // await Remind.deleteOne({ _id: rm._id });
+            await Remind.updateOne({ _id: rm._id }, {
+                isReminded: true
+            });
+
+            // Responder
+            channel.send(`${ping}`, { embed });
         }, toMs);
     });
 };
