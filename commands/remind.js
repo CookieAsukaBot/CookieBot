@@ -5,6 +5,8 @@ moment.locale('es');
 const Remind = require('../database/models/Remind');
 
 function generateTemporalTimer(toMs, message, remind) {
+    if (toMs > 2147483647) return; // tenmporal fix | 24.85 días es el límite
+
     setTimeout(async () => {
         let embed = new Discord.MessageEmbed()
             .setColor(process.env.BOT_COLOR)
@@ -18,7 +20,7 @@ function generateTemporalTimer(toMs, message, remind) {
         });
 
         // Responder
-        message.reply({ embed });
+        await message.reply({ embed });
     }, toMs);
 };
 
@@ -52,7 +54,7 @@ async function commandList(message) {
         .setFooter(`¡Gracias por usar nuestro servici🍪!`)
         .setDescription(list);
 
-    return message.channel.send({ embed });
+    return await message.channel.send({ embed });
 };
 
 module.exports = {
@@ -82,28 +84,44 @@ module.exports = {
         let getDateInfo = 0;
         let setDate = actualDate;
 
-        // m
-        if (getDate.includes('m')) {
-            getDateInfo = parseInt(getDate.split('m')[0]);
-            setDate.add(getDateInfo, 'minutes');
-        }
-        // h
-        if (getDate.includes('h')) {
-            getDateInfo = parseInt(getDate.split('h')[0]);
-            setDate.add(getDateInfo, 'hours');
-        }
+        // Fechas
+        if (getDate.includes('/')) {
+            let fullDate = getDate.split('/');
 
-        // d
-        if (getDate.includes('d')) {
-            getDateInfo = parseInt(getDate.split('d')[0]);
-            setDate.add(getDateInfo, 'days');
+            let getDay = fullDate[0];
+            let getMonth = fullDate[1];
+            let getYear = fullDate[2];
+
+            // Si faltan dataos
+            if (!getDay || !getMonth || !getYear) return message.reply(`ejemplo de uso: ${process.env.BOT_PREFIX}${this.name} ${this.usage}`);
+
+            // Agregar fecha
+            setDate = moment(`${getDay}-${getMonth}-${getYear}`, 'DD/MM/YY');
+        } else {
+            // m
+            if (getDate.includes('m')) {
+                getDateInfo = parseInt(getDate.split('m')[0]);
+                setDate.add(getDateInfo, 'minutes');
+            }
+            // h
+            if (getDate.includes('h')) {
+                // moment(setDate).add(getDateInfo, 'hours'); // idea?
+                getDateInfo = parseInt(getDate.split('h')[0]);
+                setDate.add(getDateInfo, 'hours');
+            }
+
+            // d
+            if (getDate.includes('d')) {
+                getDateInfo = parseInt(getDate.split('d')[0]);
+                setDate.add(getDateInfo, 'days');
+            }
+            // s
+            if (getDate.includes('s')) {
+                getDateInfo = parseInt(getDate.split('s')[0]);
+                setDate.add(getDateInfo, 'weeks');
+            }
+            // y?
         }
-        // s
-        if (getDate.includes('s')) {
-            getDateInfo = parseInt(getDate.split('s')[0]);
-            setDate.add(getDateInfo, 'weeks');
-        }
-        // y?
 
         // Modelo
         const remind = new Remind({
@@ -128,8 +146,8 @@ module.exports = {
             // .setFooter(`¡Gracias por usar nuestro servici🍪!`)
             .setDescription(`Se ha guardado tu recordatorio, te lo recordaré **${setDate.fromNow()}**.`);
 
-        message.channel.send({ embed });
-        message.delete();
+        await message.channel.send({ embed });
+        await message.delete();
 
         // Crear timer
         let toMs = moment(remind.date).valueOf() - moment().valueOf();
