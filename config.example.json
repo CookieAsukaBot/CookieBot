@@ -1,0 +1,9 @@
+{
+    "commands": {
+        "prefix": "!",
+        "permissions": {
+            "admin": ["admin"],
+            "mod": ["mod"]
+        }
+    }
+}
