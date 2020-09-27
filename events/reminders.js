@@ -27,7 +27,7 @@ async function setTimers(reminds, bot) {
             let embed = new Discord.MessageEmbed()
                 .setColor(process.env.BOT_COLOR)
                 .setAuthor('Recordatorio', avatar.displayAvatarURL())
-                .setFooter(`¡Gracias por usar nuestro servici🍪!`)
+                .setFooter(`¡Gracias por usar nuestro servici🍪! | ${moment(rm.date)}`)
                 .setDescription(`${rm.message}`);
 
             // Actualizar
