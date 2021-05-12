@@ -1,6 +1,8 @@
 const Discord = require('discord.js');
-const moment = require('moment');
-moment.locale('es');
+const dayjs = require('dayjs');
+const relativeTime = require('dayjs/plugin/relativeTime');
+dayjs.extend(relativeTime);
+dayjs.locale('es');
 
 const Remind = require('../database/models/Remind');
 
@@ -8,7 +10,7 @@ async function setTimers(reminds, bot) {
     reminds.forEach(rm => {
         // Transformar a MS
         let getDate = rm.date;
-        let toMs = moment(getDate).valueOf() - moment().valueOf();
+        let toMs = dayjs(getDate).valueOf() - dayjs().valueOf();
 
         // Actualizar versión
         if (rm.isReminded) return;
@@ -22,12 +24,12 @@ async function setTimers(reminds, bot) {
             let channel = await guild.channels.cache.find(c => c.id === rm.channel);
 
             let ping = `<@${rm.userID}>`;
-            let avatar = await bot.users.cache.find(u => u.id === rm.userID);
+            let avatar = await bot.users.fetch(rm.userID);
 
             let embed = new Discord.MessageEmbed()
                 .setColor(process.env.BOT_COLOR)
-                .setAuthor('Recordatorio', avatar.displayAvatarURL())
-                .setFooter(`¡Gracias por usar nuestro servici🍪! | ${moment(rm.date)}`)
+                .setAuthor('Recordatorio', avatar.displayAvatarURL()) // workaround
+                .setFooter(`¡Gracias por usar nuestro servici🍪! | ${dayjs(rm.date)}`)
                 .setDescription(`${rm.message}`);
 
             // Actualizar
