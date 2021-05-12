@@ -1,7 +1,9 @@
 const Discord = require('discord.js');
 const dayjs = require('dayjs');
 const relativeTime = require('dayjs/plugin/relativeTime');
+const localizedFormat = require('dayjs/plugin/localizedFormat');
 dayjs.extend(relativeTime);
+dayjs.extend(localizedFormat);
 dayjs.locale('es');
 
 const Remind = require('../database/models/Remind');
@@ -28,8 +30,8 @@ async function setTimers(reminds, bot) {
 
             let embed = new Discord.MessageEmbed()
                 .setColor(process.env.BOT_COLOR)
-                .setAuthor('Recordatorio', avatar.displayAvatarURL()) // workaround
-                .setFooter(`¡Gracias por usar nuestro servici🍪! | ${dayjs(rm.date)}`)
+                .setAuthor(`Recordatorio (${dayjs(rm.date).fromNow()})`, avatar.displayAvatarURL()) // workaround
+                .setFooter(`¡Gracias por usar nuestro servici🍪! | ${dayjs(rm.date).format('LLL')}`)
                 .setDescription(`${rm.message}`);
 
             // Actualizar
