@@ -14,7 +14,7 @@ async function setTimers(reminds, bot) {
         let getDate = rm.date;
         let toMs = dayjs(getDate).valueOf() - dayjs().valueOf();
 
-        // Actualizar versión
+        // Actualizar versión // eh?
         if (rm.isReminded) return;
         if (toMs > 2147483647) return; // tenmporal fix | 24.85 días es el límite
         if (toMs <= 0) toMs = 1000;
@@ -25,6 +25,10 @@ async function setTimers(reminds, bot) {
             if (!guild || guild.length == 0) return;
             let channel = await guild.channels.cache.find(c => c.id === rm.channel);
 
+            // Comprobar si el usuario sigue existiendo
+            if (!await bot.users.fetch(rm.userID)) return await Remind.updateOne({ _id: rm._id }, { isReminded: true }); // Si no se encuentra se ignora la notificación y se marca como recordado
+
+            // Hacer ping FeelsGoodMan
             let ping = `<@${rm.userID}>`;
             let avatar = await bot.users.fetch(rm.userID);
 
