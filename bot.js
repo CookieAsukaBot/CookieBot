@@ -33,4 +33,4 @@ require('./events/login')(bot);
 require('./events/reminders')(bot);
 
 // Plugins
-// require('./plugins/index')(bot);
+require('./plugins/index')(bot);
