@@ -61,6 +61,8 @@ module.exports = (bot) => {
     const plugins = fs.readdirSync(__dirname)
         .filter(folder => !folder.endsWith('.js')); // Solo toma si no termina con .js
 
+    // Comprobar si hay plugins
+    if (plugins.length <= 0) return console.log('[PLUGINS] No hay ningún plugin instalado.');
     console.log(`Plugins: ${plugins}`);
 
     // // Obtener información
