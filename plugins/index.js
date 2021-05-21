@@ -20,7 +20,7 @@ async function installModules (plugin) {
     let installed = [];
 
     try {
-        await modules.forEach(async dependencie => {
+        await modules.forEach(dependencie => {
             // Comprobar si está instalada
             if (moduleIsAvailable(dependencie)) {
                 // Agregar localmente
@@ -28,15 +28,7 @@ async function installModules (plugin) {
                 return console.log(dependencie + ' ya está instalado!');
             } else {
                 // Instalar
-                console.log(`[PLUGIN] [${name}] Instalando ${dependencie}....`);
-
-                /**
-                 * 
-                 * 
-                 * 
-                 * 
-                 * 
-                 */
+                installDependencie(dependencie, name);
 
                 return console.log(`[PLUGIN] [${name.toUpperCase()}] [${dependencie.toUpperCase()}] Se han instalado dependencias. Se requiere de reiniciar el BOT.`);
             };
@@ -45,14 +37,16 @@ async function installModules (plugin) {
         console.log(`[PLUGIN] [${name}] Ocurrió un error al intentar comprobar/instalar dependencias.`);
     };
 
+    // Se devuélve la lista de plugins ya instalados
     return installed;
 };
 
-async function installModule (dependencie) {
+function installDependencie (dependencie, name) {
     try {
-
+        console.log(`[PLUGINS] [${name.toUpperCase()}] Instalando ${dependencie}...`);
+        exec(`npm install ${dependencie}`);
     } catch (err) {
-
+        console.log(`[PLUGINS] [${name.toUpperCase()}] Ocurrió un error al intentar instalar la dependencia ${dependencie}.`);
     }
 };
 
@@ -76,9 +70,17 @@ module.exports = (bot) => {
         try {
             // Index
             let index = await require(`${__dirname}/${plugin}/index.js`); // .plugin(bot); // Se agrega .plugin() porque puede ejecutar cualquier cosa que haya dentro, pero queremos plugin. Y se agrega (bot) por las funcionalidades de la API de Discord
+
+            // Comprobar si el index existe
+            /**
+             * 
+             * 
+             */
+
             let dependencies = index.dependencies;
 
-            console.log({ plugin_name: index.name, plugin_dependencies: dependencies });
+            // debug can delete:
+            // console.log({ plugin_name: index.name, plugin_dependencies: dependencies });
 
             // Comprobar si hay dependencias
             if (dependencies.length >= 1) {
@@ -89,7 +91,7 @@ module.exports = (bot) => {
                 if (installed.length == dependencies.length) {
                     // Iniciar plugin
                     await index.plugin(bot);                    
-                } else{
+                } else {
                     console.log("Se requiere de instalar dependencias");
                 };
             } else {
