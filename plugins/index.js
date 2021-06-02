@@ -25,16 +25,15 @@ async function installModules (plugin) {
             if (moduleIsAvailable(dependencie)) {
                 // Agregar localmente
                 installed.push(dependencie);
-                return console.log(dependencie + ' ya está instalado!');
+                return console.log(`[PLUGINS] [${name.toUpperCase()}] La dependencia ${dependencie.toUpperCase()} ya está instalada.`);
             } else {
                 // Instalar
                 installDependencie(dependencie, name);
-
-                return console.log(`[PLUGIN] [${name.toUpperCase()}] [${dependencie.toUpperCase()}] Se han instalado dependencias. Se requiere de reiniciar el BOT.`);
+                return console.log(`[PLUGIN] [${name.toUpperCase()}] Se ha instalado de la dependencia [${dependencie.toUpperCase()}]. Se requiere de reiniciar el BOT para funcionar.`);
             };
         });
     } catch (err) {
-        console.log(`[PLUGIN] [${name}] Ocurrió un error al intentar comprobar/instalar dependencias.`);
+        console.log(`[PLUGINS] [${name}] Ocurrió un error al intentar comprobar/instalar dependencias.`);
     };
 
     // Se devuélve la lista de plugins ya instalados
@@ -95,7 +94,7 @@ module.exports = (bot) => {
                     // Iniciar plugin
                     await index.plugin(bot);                    
                 } else {
-                    console.log("Se requiere de instalar dependencias");
+                    console.log(`[PLUGINS] [${plugin.toUpperCase()}] Se requiere de instalar dependencias.`);
                 };
             } else {
                 // Iniciar plugin
