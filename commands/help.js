@@ -16,7 +16,7 @@ function addDescription(commands) {
 module.exports = {
     name: 'help',
     description: 'Muestra todos los comandos e información.',
-    aliases: ['commands'],
+    aliases: ['commands', 'ayuda', 'comandos'],
     usage: '[nombre del comando]',
     execute (message, args) {
         // Obtener la Collection
@@ -47,7 +47,7 @@ module.exports = {
 
         let embed = new Discord.MessageEmbed()
             .setColor(process.env.BOT_COLOR)
-            .setTitle(command.name.charAt(0).toUpperCase() + command.name.slice(1))
+            .setTitle(`Comando ${command.name.charAt(0).toUpperCase() + command.name.slice(1)}`)
             .setAuthor(message.client.user.username, message.client.user.displayAvatarURL())
             .setFooter(`¡Puedes usar "${prefix}help" para obtener ayuda!`);
 
