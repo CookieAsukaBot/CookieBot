@@ -1,10 +1,6 @@
 const Discord = require('discord.js');
-const dayjs = require('dayjs');
-const relativeTime = require('dayjs/plugin/relativeTime');
-const calendar = require('dayjs/plugin/calendar')
-dayjs.extend(relativeTime);
-dayjs.extend(calendar);
-dayjs.locale('es');
+const moment = require('moment');
+moment.locale('es');
 
 const Remind = require('../database/models/Remind');
 
@@ -36,14 +32,14 @@ async function commandList(message) {
     // Mensaje
     reminds.map((r) => {
         let getDate = r.date;
-        let toMs = dayjs(getDate).valueOf() - dayjs().valueOf();
+        let toMs = moment(getDate).valueOf() - moment().valueOf();
 
         if (toMs <= 0) return;
 
         // Agregar
         let id = index++; // index + 1
-        let timeFromNow = dayjs(r.date).fromNow();
-        let timeDetailed = dayjs(r.date).calendar();
+        let timeFromNow = moment(r.date).fromNow();
+        let timeDetailed = moment(r.date).calendar();
         let toPush = `${id} - ${timeDetailed} (${timeFromNow})`
 
         list.push(toPush);
@@ -76,7 +72,7 @@ module.exports = {
         // Comprobar si el comando es válido
         if (!args.join(' ').split('|')[0] || !args.join(' ').split('|')[1]) return message.reply(`ejemplo de uso: ${process.env.BOT_PREFIX}${this.name} ${this.usage}`);
 
-        // Obtener Datos del mensaje
+        // Obtener Datos del mensaje (parsing)
         const msg = args.join(' ').split('|'); // 3d | hello
         const getDate = msg[0].toString(); // 3d
         const getMessage = msg[1].toString().trim(); // hello
@@ -84,7 +80,7 @@ module.exports = {
         if (!getMessage || getMessage.length <= 0) return message.reply(`ejemplo de uso: ${process.env.BOT_PREFIX}${this.name} ${this.usage}`);
 
         // Convertir a fecha
-        let actualDate = dayjs();
+        const actualDate = moment();
         let getDateInfo = 0;
         let setDate = actualDate;
 
@@ -100,33 +96,31 @@ module.exports = {
             if (!getDay || !getMonth || !getYear) return message.reply(`ejemplo de uso: ${process.env.BOT_PREFIX}${this.name} ${this.usage}`);
 
             // Agregar fecha
-            setDate = dayjs(`${getDay}-${getMonth}-${getYear}`, 'DD/MM/YY');
+            setDate = moment(`${getDay}-${getMonth}-${getYear}`, 'DD/MM/YY');
         } else {
             // m
             if (getDate.includes('m')) {
                 getDateInfo = parseInt(getDate.split('m')[0]);
-                setDate.add(getDateInfo, 'minute');
+                setDate.add(getDateInfo, 'minutes');
             }
             // h
             if (getDate.includes('h')) {
-                // dayjs(setDate).add(getDateInfo, 'hours'); // idea?
+                // moment(setDate).add(getDateInfo, 'hours'); // idea?
                 getDateInfo = parseInt(getDate.split('h')[0]);
-                setDate.add(getDateInfo, 'hour');
+                setDate.add(getDateInfo, 'hours');
             }
 
             // d
             if (getDate.includes('d')) {
                 getDateInfo = parseInt(getDate.split('d')[0]);
-                setDate.add(getDateInfo, 'day');
+                setDate.add(getDateInfo, 'days');
             }
             // s
             if (getDate.includes('s')) {
                 getDateInfo = parseInt(getDate.split('s')[0]);
-                setDate.add(getDateInfo, 'week');
+                setDate.add(getDateInfo, 'weeks');
             }
             // y?
-
-            return console.log(setDate.fromNow());
         }
 
         // Modelo
@@ -150,13 +144,13 @@ module.exports = {
             // .setTitle('Recordatorio')
             .setAuthor(`Recordatorio para ${message.author.tag}`, message.author.displayAvatarURL()) // message.author.tag
             // .setFooter(`¡Gracias por usar nuestro servici🍪!`)
-            .setDescription(`Se ha guardado tu recordatorio, te lo recordaré **${setDate.fromNow()}**.`);
+            .setDescription(`💌 Se ha guardado tu recordatorio, te lo recordaré **${setDate.fromNow()}**.`);
 
         await message.channel.send({ embed });
         await message.delete();
 
         // Crear timer
-        let toMs = dayjs(remind.date).valueOf() - dayjs().valueOf();
+        let toMs = moment(remind.date).valueOf() - moment().valueOf();
         generateTemporalTimer(toMs, message, remind);
 	}
 };
