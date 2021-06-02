@@ -68,14 +68,17 @@ module.exports = (bot) => {
 
         // Correr index.js
         try {
-            // Index
-            let index = await require(`${__dirname}/${plugin}/index.js`); // .plugin(bot); // Se agrega .plugin() porque puede ejecutar cualquier cosa que haya dentro, pero queremos plugin. Y se agrega (bot) por las funcionalidades de la API de Discord
+            // Ruta del index
+            const indexPath = `${__dirname}/${plugin}/index.js`;
 
             // Comprobar si el index existe
-            /**
-             * 
-             * 
-             */
+            if (!fs.existsSync(indexPath)) return console.log(`[PLUGINS] [${plugin.toUpperCase()}] No se encontró el index.js`);
+
+            // Cargar index
+            let index = await require(indexPath); // .plugin(bot); // Se agrega .plugin() porque puede ejecutar cualquier cosa que haya dentro, pero queremos plugin. Y se agrega (bot) por las funcionalidades de la API de Discord
+
+            // Comprobar si el index existe
+            if (!index.plugin) return console.log(`[PLUGINS] [${plugin.toUpperCase()}] El index.js no tiene "plugin()".`);
 
             let dependencies = index.dependencies;
 
