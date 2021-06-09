@@ -78,6 +78,7 @@ module.exports = (bot) => {
 
             // Comprobar si el index existe
             if (!index.plugin) return console.log(`[PLUGINS] [${plugin.toUpperCase()}] El index.js no tiene "plugin()".`);
+            if (index.enabled != undefined && index.enabled == false) return console.log(`[PLUGINS] [${plugin.toUpperCase()}] El plugin está deshabilitado.`);
 
             let dependencies = index.dependencies;
 
