@@ -29,9 +29,9 @@ async function setTimers(reminds, bot) {
 
             let embed = new Discord.MessageEmbed()
                 .setColor(process.env.BOT_COLOR)
-                .setAuthor(`Recordatorio (${moment(rm.date).fromNow()})`, avatar.displayAvatarURL()) // workaround
-                .setFooter(`¡Gracias por usar nuestro servici🍪! | ${moment(rm.date)}`) // después del moment se agregó como prueba
-                .setDescription(`${rm.message}`);
+                .setAuthor(`Recordatorio (${moment(rm.createdAt).fromNow()})`, avatar.displayAvatarURL()) // workaround
+                .setDescription(`${rm.message}`)
+                .setFooter(`¡Gracias por usar nuestro servici🍪! | ${moment(rm.createdAt).format('dddd, MMMM Do YYYY, h:mm:ss a')}`); // después del moment se agregó como prueba
 
             // Actualizar
             await Remind.updateOne({ _id: rm._id }, {
