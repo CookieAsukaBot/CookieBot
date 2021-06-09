@@ -10,9 +10,9 @@ function generateTemporalTimer(toMs, message, remind) {
     setTimeout(async () => {
         let embed = new Discord.MessageEmbed()
             .setColor(process.env.BOT_COLOR)
-            .setAuthor('Recordatorio', message.author.displayAvatarURL())
-            .setFooter(`¡Gracias por usar nuestro servici🍪!`)
-            .setDescription(`${remind.message}`);
+            .setAuthor(`Recordatorio (${moment(remind.createdAt).fromNow()})`, message.author.displayAvatarURL())
+            .setDescription(`${remind.message}`)
+            .setFooter(`¡Gracias por usar nuestro servici🍪! | ${moment(remind.createdAt).format('dddd, MMMM Do YYYY, h:mm:ss a')}`);
 
         // Actualizar
         await Remind.updateOne({ _id: remind._id }, {
@@ -20,7 +20,7 @@ function generateTemporalTimer(toMs, message, remind) {
         });
 
         // Responder
-        await message.reply({ embed });
+        await message.channel.send(`<@${remind.userID}>`, { embed });
     }, toMs);
 };
 
@@ -75,7 +75,7 @@ module.exports = {
         // Obtener Datos del mensaje (parsing)
         const msg = args.join(' ').split('|'); // 3d | hello
         const getDate = msg[0].toString(); // 3d
-        const getMessage = msg[1].toString().trim(); // hello
+        const getMessage = msg[1].toString().trim(); // " hello" => "hello"
 
         if (!getMessage || getMessage.length <= 0) return message.reply(`ejemplo de uso: ${process.env.BOT_PREFIX}${this.name} ${this.usage}`);
 
