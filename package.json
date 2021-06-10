@@ -11,9 +11,9 @@
   },
   "dependencies": {
     "discord.js": "^12.5.3",
-    "dotenv": "^9.0.2",
+    "dotenv": "^10.0.0",
     "moment": "^2.29.1",
-    "mongoose": "^5.12.8"
+    "mongoose": "^5.12.13"
   },
   "devDependencies": {
     "nodemon": "^2.0.7"
