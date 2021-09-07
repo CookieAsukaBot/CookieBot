@@ -6,15 +6,15 @@ module.exports = (bot, config) => {
     const adminPermissions = config.commands.permissions.admin;
     const modPermissions = config.commands.permissions.mod;
 
-    bot.on('message', message => {
+    bot.on('messageCreate', message => {
         // Si el mensaje no empieza con el prefix || si el mensaje es de un bot => no avanza el código (return)
         if (!message.content.startsWith(prefix) || message.author.bot) return;
         // Comprobar si el mensaje se envió en el servidor
         if (message.channel.type === "dm") return;
         // Abajo de if (!command) return
         // if (command.guildOnly && message.channel.type !== 'text') {
-        //     return message.reply('no puedes usar comandos por mensajes privados!');
-        // }
+        //     return message.message.reply({ content: '¡No puedes usar comandos por mensajes privados!' });
+        // };
 
         // Argumentos / Comando
         const args = message.content.slice(prefix.length).split(/ +/);
@@ -39,19 +39,19 @@ module.exports = (bot, config) => {
             if (command.roles.some(r => adminPermissions.includes(r))) {
                 // Verificar usuario
                 if (message.member.roles.cache.some(r => adminPermissions.includes(r.name))) hasPermissions = true;
-            } 
+            };
 
             // Requiere mod
             // Si el usuario tiene un role de modPermissions
             if (command.roles.some(r => modPermissions.includes(r))) {
                 // Verificar usuario
                 if (message.member.roles.cache.some(r => modPermissions.includes(r.name))) hasPermissions = true;
-            }
+            };
 
             // Comprobar si tiene permisos
             // Si el usuario no tiene permisos, no se continúa
-            if (!hasPermissions) return message.reply('no tienes permisos!');
-        }
+            if (!hasPermissions) return message.reply({ content: '¡No tienes permisos!' });
+        };
 
         // Comprobar si requiere de args y el usuario no usó args
         if (command.args && !args.length) {
@@ -60,20 +60,20 @@ module.exports = (bot, config) => {
             // Si el comando tiene un ejemplo de uso
             if (command.usage) {
                 reply += `\nEjemplo de su uso: \`${prefix}${command.name} ${command.usage}\``;
-            }
+            };
 
             // Envía el mensaje
-            return message.channel.send(reply);
-        }
+            return message.reply({ content: reply });
+        };
 
         // Agregar cooldown aquí en el futuro
 
         // Intentar ejecutar el comando
         try {
-            command.execute(message, args);
+            command.execute(message, args, bot);
         } catch (err) {
             console.error(err);
             message.reply('ocurrió un error al intentar usar el comando!');
-        }
+        };
     });
-}
+};

@@ -35,15 +35,15 @@ module.exports = {
             embed.setDescription(addDescription(commands));
 
             // Responder
-            return message.channel.send({ embed });
-        }
+            return message.reply({ embeds: [embed] });
+        };
 
         // Buscar por comando
         const name = args[0].toLowerCase();
         const command = commands.get(name) || commands.find(c => c.aliases && c.aliases.includes(name));
 
         // Si no se encuentra
-        if (!command) return message.reply(`no se encontró el comando \`${name}\`!`);
+        if (!command) return message.reply({ content: `No se encontró el comando \`${name}\`!` });
 
         let embed = new Discord.MessageEmbed()
             .setColor(process.env.BOT_COLOR)
@@ -58,6 +58,6 @@ module.exports = {
         if (command.usage) embed.addField('Ejemplo', `${prefix}${command.name} ${command.usage}`);
 
         // Responder
-        message.channel.send({ embed });
+        message.reply({ embeds: [embed] });
     }
 };

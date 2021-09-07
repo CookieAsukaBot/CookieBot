@@ -18,6 +18,6 @@ module.exports = {
         console.log(showConsole); // opcional?
 
         // Enviar mensaje
-        message.channel.send(msg);
+        message.reply({ content: msg });
     }
 };

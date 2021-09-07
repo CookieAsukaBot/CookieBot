@@ -20,7 +20,7 @@ function generateTemporalTimer(toMs, message, remind) {
         });
 
         // Responder
-        await message.channel.send(`<@${remind.userID}>`, { embed });
+        await message.reply({ embeds: [embed] });
     }, toMs);
 };
 
@@ -40,12 +40,12 @@ async function commandList(message) {
         let id = index++; // index + 1
         let timeFromNow = moment(r.date).fromNow();
         let timeDetailed = moment(r.date).calendar();
-        let toPush = `${id} - ${timeDetailed} (${timeFromNow})`
+        let toPush = `${id} - ${timeDetailed} (${timeFromNow})`;
 
         list.push(toPush);
     });
 
-    if (!reminds || list.length <= 0) return message.reply('no tienes ningún recordatorio!'); // Embed pls
+    if (!reminds || list.length <= 0) return message.reply({ content: 'No tienes ningún recordatorio pendiente.' }); // Embed pls
 
     // Responder
     let embed = new Discord.MessageEmbed()
@@ -54,7 +54,7 @@ async function commandList(message) {
         .setFooter(`¡Gracias por usar nuestro servici🍪!`)
         .setDescription(list);
 
-    return await message.channel.send({ embed });
+    return await message.reply({ embeds: [embed] });
 };
 
 module.exports = {
@@ -63,21 +63,23 @@ module.exports = {
     aliases: ['remindme', 'rm', 'reminder', 'recordar'],
     usage: '1 (m, h, d, s) | [mensaje]',
 	async execute (message, args) {
+        // Ejemplo de uso
+        let example = `Ejemplo de uso: ${process.env.BOT_PREFIX}${this.name} ${this.usage}`;
         // Si no hay args mostrar ejemplo
-        if (!args || args.length <= 0) return message.reply(`ejemplo de uso: ${process.env.BOT_PREFIX}${this.name} ${this.usage}`);
+        if (!args || args.length <= 0) return message.reply({ content: example });
 
         // Comando List
         if (args[0].toLowerCase() === "list") return commandList(message);
 
         // Comprobar si el comando es válido
-        if (!args.join(' ').split('|')[0] || !args.join(' ').split('|')[1]) return message.reply(`ejemplo de uso: ${process.env.BOT_PREFIX}${this.name} ${this.usage}`);
+        if (!args.join(' ').split('|')[0] || !args.join(' ').split('|')[1]) return message.reply({ content: example });
 
         // Obtener Datos del mensaje (parsing)
         const msg = args.join(' ').split('|'); // 3d | hello
         const getDate = msg[0].toString(); // 3d
         const getMessage = msg[1].toString().trim(); // " hello" => "hello"
 
-        if (!getMessage || getMessage.length <= 0) return message.reply(`ejemplo de uso: ${process.env.BOT_PREFIX}${this.name} ${this.usage}`);
+        if (!getMessage || getMessage.length <= 0) return message.reply({ content: example });
 
         // Convertir a fecha
         const actualDate = moment();
@@ -93,7 +95,7 @@ module.exports = {
             let getYear = fullDate[2];
 
             // Si faltan dataos
-            if (!getDay || !getMonth || !getYear) return message.reply(`ejemplo de uso: ${process.env.BOT_PREFIX}${this.name} ${this.usage}`);
+            if (!getDay || !getMonth || !getYear) return message.reply({ content: example });
 
             // Agregar fecha
             setDate = moment(`${getDay}-${getMonth}-${getYear}`, 'DD/MM/YY');
@@ -102,26 +104,26 @@ module.exports = {
             if (getDate.includes('m')) {
                 getDateInfo = parseInt(getDate.split('m')[0]);
                 setDate.add(getDateInfo, 'minutes');
-            }
+            };
             // h
             if (getDate.includes('h')) {
                 // moment(setDate).add(getDateInfo, 'hours'); // idea?
                 getDateInfo = parseInt(getDate.split('h')[0]);
                 setDate.add(getDateInfo, 'hours');
-            }
+            };
 
             // d
             if (getDate.includes('d')) {
                 getDateInfo = parseInt(getDate.split('d')[0]);
                 setDate.add(getDateInfo, 'days');
-            }
+            };
             // s
             if (getDate.includes('s')) {
                 getDateInfo = parseInt(getDate.split('s')[0]);
                 setDate.add(getDateInfo, 'weeks');
-            }
+            };
             // y?
-        }
+        };
 
         // Modelo
         const remind = new Remind({
@@ -146,7 +148,7 @@ module.exports = {
             // .setFooter(`¡Gracias por usar nuestro servici🍪!`)
             .setDescription(`💌 Se ha guardado tu recordatorio, te lo recordaré **${setDate.fromNow()}**.`);
 
-        await message.channel.send({ embed });
+        await message.reply({ embeds: [embed] });
         await message.delete();
 
         // Crear timer

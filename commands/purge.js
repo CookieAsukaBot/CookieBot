@@ -9,14 +9,16 @@ module.exports = {
         const amount = parseInt(args[0]) + 1; // +1 es por el mensaje que se usa de comando
 
         // Comprobar valores
-        if (isNaN(amount)) return message.reply('se requieren números!');
-        if (amount <= 1 || amount > 100) return message.reply('se requiere de un valor del 1 al 99');
+        if (isNaN(amount)) return message.reply({ content: "¡Se requieren números!" });
+        if (amount <= 1 || amount > 100) return message.reply({ content: 'Se requiere de un valor del 1 al 99' });
 
         // Eliminar mensajes
         message.channel.bulkDelete(amount, true)
             .catch(err => {
                 console.error(err);
-                message.channel.send('ocurrió un error al intentar de eliminar mensajes en este canal!');
+                message.reply({
+                    content: '¡Ocurrió un error al intentar de eliminar mensajes en este canal!'
+                });
             });
 	}
 };
