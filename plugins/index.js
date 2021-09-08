@@ -29,11 +29,11 @@ async function installModules (plugin) {
             } else {
                 // Instalar
                 installDependencie(dependencie, name);
-                return console.log(`[PLUGIN] [${name.toUpperCase()}] Se ha instalado de la dependencia [${dependencie.toUpperCase()}]. Se requiere de reiniciar el BOT para funcionar.`);
+                return console.log(`[PLUGINS] [${name.toUpperCase()}] Se instaló de la dependencia [${dependencie.toUpperCase()}]. Se requiere de reiniciar el BOT para funcionar.`);
             };
         });
     } catch (err) {
-        console.log(`[PLUGINS] [${name}] Ocurrió un error al intentar comprobar/instalar dependencias.`);
+        console.log(`[PLUGINS] [${name.toUpperCase()}] Ocurrió un error al intentar comprobar/instalar dependencias.`);
     };
 
     // Se devuélve la lista de plugins ya instalados
