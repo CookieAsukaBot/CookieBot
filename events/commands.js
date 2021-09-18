@@ -12,4 +12,4 @@ module.exports = (bot, commandPath) => {
         // Agrega el comando a la Collection
         bot.commands.set(command.name, command);
     });
-}
+};
