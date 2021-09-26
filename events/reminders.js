@@ -39,7 +39,10 @@ async function setTimers(reminds, bot) {
             });
 
             // Responder
-            await channel.send(`${ping}`, { embed });
+            await channel.send({
+                content: `${ping}`,
+                embeds: [embed]
+            });
         }, toMs);
     });
 };

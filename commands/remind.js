@@ -20,7 +20,10 @@ function generateTemporalTimer(toMs, message, remind) {
         });
 
         // Responder
-        await message.reply({ embeds: [embed] });
+        await message.channel.send({
+            content: `<@${remind.userID}>`,
+            embeds: [embed]
+        });
     }, toMs);
 };
 
@@ -45,16 +48,16 @@ async function commandList(message) {
         list.push(toPush);
     });
 
-    if (!reminds || list.length <= 0) return message.reply({ content: 'No tienes ningún recordatorio pendiente.' }); // Embed pls
+    if (!reminds || list.length <= 0) return message.reply('no tienes ningún recordatorio!'); // Embed pls
 
     // Responder
     let embed = new Discord.MessageEmbed()
         .setColor(process.env.BOT_COLOR)
         .setAuthor(`Lista de recordatorios para ${message.author.tag}`, message.author.displayAvatarURL())
         .setFooter(`¡Gracias por usar nuestro servici🍪!`)
-        .setDescription(list);
+        .setDescription(list.join("\n"));
 
-    return await message.reply({ embeds: [embed] });
+    return await message.channel.send({ embeds: [embed] });
 };
 
 module.exports = {
@@ -148,7 +151,7 @@ module.exports = {
             // .setFooter(`¡Gracias por usar nuestro servici🍪!`)
             .setDescription(`💌 Se ha guardado tu recordatorio, te lo recordaré **${setDate.fromNow()}**.`);
 
-        await message.reply({ embeds: [embed] });
+        await message.channel.send({ embeds: [embed] });
         await message.delete();
 
         // Crear timer
