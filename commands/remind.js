@@ -4,7 +4,7 @@ moment.locale('es');
 
 const Remind = require('../database/models/Remind');
 
-function generateTemporalTimer(toMs, message, remind) {
+function generateTemporalTimer (toMs, message, remind) {
     if (toMs > 2147483647) return; // tenmporal fix | 24.85 días es el límite
 
     setTimeout(async () => {
@@ -27,24 +27,32 @@ function generateTemporalTimer(toMs, message, remind) {
     }, toMs);
 };
 
-async function commandList(message) {
-    const reminds = await Remind.find({ userID: message.author.id });
+async function commandList (message) {
     const list = [];
     let index = 1;
 
-    // Mensaje
+    // Buscar
+    const reminds = await Remind.find({
+        userID: message.author.id,
+        isReminded: false
+    }).sort({
+        date: 1
+    });
+
+    // Por cada remind
     reminds.map((r) => {
         let getDate = r.date;
         let toMs = moment(getDate).valueOf() - moment().valueOf();
 
         if (toMs <= 0) return;
 
-        // Agregar
+        // Crear string
         let id = index++; // index + 1
         let timeFromNow = moment(r.date).fromNow();
         let timeDetailed = moment(r.date).calendar();
         let toPush = `${id} - ${timeDetailed} (${timeFromNow})`;
 
+        // Agregar string a la lista (array)
         list.push(toPush);
     });
 
