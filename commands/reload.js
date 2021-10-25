@@ -14,11 +14,10 @@ module.exports = {
         // Si el comando no existe
         if (!command) return message.reply({ content: `no se encontró el comando \`${command.name}\`` });
 
-        // Eliminar caché
-        delete require.cache[require.resolve(`./${command.name}.js`)];
-
         // Cargar comando
         try {
+            // Eliminar caché
+            delete require.cache[require.resolve(`./${command.name}.js`)];
             // Buscar
             const newCommand = require(`./${commandName}.js`);
             // Agregar al Collection
@@ -27,11 +26,10 @@ module.exports = {
             message.reply({ content: `Se volvió a cargar el comando \`${commandName}\`!` });
         } catch (err) {
             console.log(err);
-            let sendError = `Ocurrió un error al volver a cargar el comando \`${commandName}\`\n`;
-            sendError += `${err.message}`;
-
             // Responder
-            message.reply({ content: sendError });
+            message.reply({
+                content: `Ocurrió un error al volver a cargar el comando \`${commandName}\`.`
+            });
         };
 	}
 };
