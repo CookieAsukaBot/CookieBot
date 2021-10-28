@@ -90,10 +90,9 @@ module.exports = (bot, config) => {
 
         // Intentar ejecutar el comando
         try {
-            await command.execute(message, args, bot);
-
             timestamps.set(message.author.id, now);
             setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
+            await command.execute(message, args, bot);
         } catch (err) {
             console.error(err);
             message.reply('ocurrió un error al intentar usar el comando!');
