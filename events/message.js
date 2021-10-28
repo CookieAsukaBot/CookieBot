@@ -1,17 +1,20 @@
+const { Collection } = require('discord.js');
+
 module.exports = (bot, config) => {
     // Configuración
-    const prefix = process.env.BOT_PREFIX;
+    const prefix = bot.prefix;
 
     // Obtener permisos
     const adminPermissions = config.commands.permissions.admin;
     const modPermissions = config.commands.permissions.mod;
 
-    bot.on('messageCreate', message => {
+    bot.on('messageCreate', async message => {
         // Si el mensaje no empieza con el prefix || si el mensaje es de un bot => no avanza el código (return)
         if (!message.content.startsWith(prefix) || message.author.bot) return;
         // Comprobar si el mensaje se envió en el servidor
         if (message.channel.type === "dm") return;
         // Abajo de if (!command) return
+        // guildOnly option
         // if (command.guildOnly && message.channel.type !== 'text') {
         //     return message.message.reply({ content: '¡No puedes usar comandos por mensajes privados!' });
         // };
@@ -66,11 +69,31 @@ module.exports = (bot, config) => {
             return message.reply({ content: reply });
         };
 
-        // Agregar cooldown aquí en el futuro
+        // Sitema de cooldownds
+        // https://web.archive.org/web/20200813031659/https://discordjs.guide/command-handling/adding-features.html
+        if (!bot.cooldowns.has(command.name)) {
+            bot.cooldowns.set(command.name, new Collection());
+        };
+
+        const now = Date.now();
+        const timestamps = bot.cooldowns.get(command.name);
+        const cooldownAmount = command.cooldown * 1000;
+
+        if (timestamps.has(message.author.id)) {
+            const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
+
+            if (now < expirationTime) {
+                const timeLeft = (expirationTime - now) / 1000;
+                return message.reply(`espera ${timeLeft.toFixed(1)} segundo(s) para volver a usar \`${command.name}\`.`);
+            };
+        };
 
         // Intentar ejecutar el comando
         try {
-            command.execute(message, args, bot);
+            await command.execute(message, args, bot);
+
+            timestamps.set(message.author.id, now);
+            setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
         } catch (err) {
             console.error(err);
             message.reply('ocurrió un error al intentar usar el comando!');
