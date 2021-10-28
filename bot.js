@@ -27,6 +27,8 @@ const config = require('./config.json');
 
 // Guardar comandos
 bot.commands = new Collection();
+bot.cooldowns = new Collection();
+bot.prefix = process.env.BOT_PREFIX;
 
 // Cargar comandos
 const commandPath = path.join(__dirname, 'commands');
