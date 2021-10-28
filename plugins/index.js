@@ -1,5 +1,5 @@
 const fs = require('fs');
-const { exec } = require('child_process');
+const { execSync } = require('child_process');
 
 // Funciones
 function moduleIsAvailable (dependencie) {
@@ -20,7 +20,7 @@ async function installModules (plugin) {
     let installed = [];
 
     try {
-        await modules.forEach(dependencie => {
+        await modules.forEach(async dependencie => {
             // Comprobar si está instalada
             if (moduleIsAvailable(dependencie)) {
                 // Agregar localmente
@@ -28,7 +28,8 @@ async function installModules (plugin) {
                 return console.log(`[PLUGINS] [${name.toUpperCase()}] La dependencia ${dependencie.toUpperCase()} ya está instalada.`);
             } else {
                 // Instalar
-                installDependencie(dependencie, name);
+                const status = await installDependencie(dependencie, name);
+                if (status == false) return console.log(`[PLUGINS] [${name.toUpperCase()}] Ocurrió un error al intentar comprobar/instalar [${dependencie.toUpperCase()}].`);
                 return console.log(`[PLUGINS] [${name.toUpperCase()}] Se instaló de la dependencia [${dependencie.toUpperCase()}]. Se requiere de reiniciar el BOT para funcionar.`);
             };
         });
@@ -42,11 +43,14 @@ async function installModules (plugin) {
 
 function installDependencie (dependencie, name) {
     try {
-        console.log(`[PLUGINS] [${name.toUpperCase()}] Instalando ${dependencie}...`);
-        exec(`yarn add ${dependencie}`);
-    } catch (err) {
-        console.log(`[PLUGINS] [${name.toUpperCase()}] Ocurrió un error al intentar instalar la dependencia ${dependencie}.`);
-    }
+        console.log(`[PLUGINS] [${name.toUpperCase()}] Instalando ${dependencie.toUpperCase()}...`);
+        execSync(`yarn add ${dependencie}`);
+        return true;
+    } catch (error) {        
+        console.log(`[PLUGINS] [${name.toUpperCase()}] Ocurrió un error al intentar instalar la dependencia ${dependencie.toUpperCase()}.`);
+        console.error(error);
+        return false;
+    };
 };
 
 module.exports = (bot) => {
