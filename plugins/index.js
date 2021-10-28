@@ -43,7 +43,7 @@ async function installModules (plugin) {
 function installDependencie (dependencie, name) {
     try {
         console.log(`[PLUGINS] [${name.toUpperCase()}] Instalando ${dependencie}...`);
-        exec(`npm install ${dependencie}`);
+        exec(`yarn add ${dependencie}`);
     } catch (err) {
         console.log(`[PLUGINS] [${name.toUpperCase()}] Ocurrió un error al intentar instalar la dependencia ${dependencie}.`);
     }
