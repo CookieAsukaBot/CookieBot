@@ -3,11 +3,20 @@ const Discord = require('discord.js');
 const prefix = process.env.BOT_PREFIX;
 
 // Agregar comandos en la descripción del Embed
-function addDescription(commands) {
+function addDescription (commands) {
     let desc = "";
 
-    commands.forEach(c => {
-        desc += `**${prefix}${c.name}** - ${c.description}\n`;
+    let temporal = [];
+    commands.forEach(command => {
+        if (command.category) {
+            if (!temporal.includes(command.category)) {
+                temporal.push(command.category);
+                desc += `\n**${command.category}**\n`;
+            }
+            desc += `**${prefix}${command.name}** - ${command.description}\n`;
+        } else {
+            desc += `**${prefix}${command.name}** - ${command.description}\n`;
+        };
     });
 
     return desc;
@@ -30,7 +39,7 @@ module.exports = {
                 .setTitle('Lista de comandos')
                 .setAuthor(message.client.user.username, message.client.user.displayAvatarURL())
                 .setFooter(`¡Puedes usar "${prefix}help [nombre del comando]" para obtener ayuda!`);
-            
+
             // Agregar comandos al Embed
             embed.setDescription(addDescription(commands));
 
@@ -52,6 +61,7 @@ module.exports = {
             .setFooter(`¡Puedes usar "${prefix}help" para obtener ayuda!`);
 
         // Comprobar campos del comando
+        if (command.category) embed.addField('Categoría', command.category);
         if (command.roles) embed.addField('Permisos', command.roles.join(', '));
         if (command.aliases) embed.addField('Alternativas', command.aliases.join(', '));
         if (command.description) embed.addField('Descripción', command.description);
