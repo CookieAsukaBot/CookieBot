@@ -1,3 +1,16 @@
+const getAvatar = (user) => {
+    // If true, the format will dynamically change to gif for animated avatars; the default is false.
+    return fixExtension(user.displayAvatarURL({ dynamic: true, size: 4096 }));
+};
+
+const fixExtension = (url) => {
+    if (url.includes("webp")) {
+        return url.replace("webp", "png");
+    } else {
+        return url;
+    };
+};
+
 module.exports = {
 	name: 'avatar',
     description: 'Muestra tu avatar o el de la persona mencionada.',
@@ -6,17 +19,18 @@ module.exports = {
         // Si no hay una mención
         if (!message.mentions.users.size) {
             return message.reply({
-                // If true, the format will dynamically change to gif for animated avatars; the default is false.
-                content: `Avatar de ${message.author.tag}: ${message.author.displayAvatarURL({ dynamic: true, size: 4096 })}`
+                content: `Avatar de ${message.author.tag}: ${getAvatar(message.author)}`
             });
         };
 
-        // Buscar el usuario y agregar el mensaje
-        const avatarList = message.mentions.users.map(user => {
-            return `Avatar de ${user.tag}: ${user.displayAvatarURL({ dynamic: true, size: 4096 })}`;
+        // Por cada mención
+        let avatarList = message.mentions.users.map(user => {
+            return `Avatar de ${user.tag}: ${getAvatar(user)}`;
         });
 
         // Responder
-        message.reply({ content: avatarList });
+        message.reply({
+            content: `${avatarList.join(",").replaceAll(",", "\n")}`
+        });
 	},
 };
