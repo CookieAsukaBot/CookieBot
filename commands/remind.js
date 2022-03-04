@@ -10,9 +10,14 @@ function generateTemporalTimer (toMs, message, remind) {
     setTimeout(async () => {
         let embed = new Discord.MessageEmbed()
             .setColor(process.env.BOT_COLOR)
-            .setAuthor(`Recordatorio (${moment(remind.createdAt).fromNow()})`, message.author.displayAvatarURL())
+            .setAuthor({
+                name: `Recordatorio (${moment(remind.createdAt).fromNow()})`,
+                iconURL: message.author.displayAvatarURL()
+            })
             .setDescription(`${remind.message}`)
-            .setFooter(`¡Gracias por usar nuestro servici🍪! | ${moment(remind.createdAt).format('dddd, MMMM Do YYYY, h:mm:ss a')}`);
+            .setFooter({
+                text: `¡Gracias por usar nuestro servici🍪! | ${moment(remind.createdAt).format('dddd, MMMM Do YYYY, h:mm:ss a')}`
+            });
 
         // Actualizar
         await Remind.updateOne({ _id: remind._id }, {
@@ -61,8 +66,11 @@ async function commandList (message) {
     // Responder
     let embed = new Discord.MessageEmbed()
         .setColor(process.env.BOT_COLOR)
-        .setAuthor(`Lista de recordatorios para ${message.author.tag}`, message.author.displayAvatarURL())
-        .setFooter(`¡Gracias por usar nuestro servici🍪!`)
+        .setAuthor({
+            name: `Lista de recordatorios para ${message.author.tag}`,
+            iconURL: message.author.displayAvatarURL()
+        })
+        .setFooter({ text: `¡Gracias por usar nuestro servici🍪!` })
         .setDescription(list.join("\n"));
 
     return await message.channel.send({ embeds: [embed] });
@@ -154,7 +162,10 @@ module.exports = {
         // Responder
         let embed = new Discord.MessageEmbed()
             .setColor(process.env.BOT_COLOR)
-            .setAuthor(`Recordatorio para ${message.author.tag}`, message.author.displayAvatarURL())
+            .setAuthor({
+                name: `Recordatorio para ${message.author.tag}`,
+                iconURL: message.author.displayAvatarURL()
+            })
             .setDescription(`💌 Se ha guardado tu recordatorio, te lo recordaré **${setDate.fromNow()}**.`);
 
         await message.channel.send({ embeds: [embed] });

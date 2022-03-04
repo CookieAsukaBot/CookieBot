@@ -12,7 +12,7 @@ async function setTimers(reminds, bot) {
 
         // Actualizar versión
         if (rm.isReminded) return;
-        if (toMs > 2147483647) return; // tenmporal fix | 24.85 días es el límite
+        if (toMs > 2147483647) return; // temporal fix | 24.85 días es el límite
         if (toMs <= 0) toMs = 1000;
 
         setTimeout(async () => {
@@ -29,9 +29,14 @@ async function setTimers(reminds, bot) {
 
             let embed = new Discord.MessageEmbed()
                 .setColor(process.env.BOT_COLOR)
-                .setAuthor(`Recordatorio (${moment(rm.createdAt).fromNow()})`, avatar.displayAvatarURL()) // workaround
+                .setAuthor({
+                    name: `Recordatorio (${moment(rm.createdAt).fromNow()})`,
+                    iconURL: avatar.displayAvatarURL()
+                }) // workaround
                 .setDescription(`${rm.message}`)
-                .setFooter(`¡Gracias por usar nuestro servici🍪! | ${moment(rm.createdAt).format('dddd, MMMM Do YYYY, h:mm:ss a')}`); // después del moment se agregó como prueba
+                .setFooter({
+                    text: `¡Gracias por usar nuestro servici🍪! | ${moment(rm.createdAt).format('dddd, MMMM Do YYYY, h:mm:ss a')}`
+                }); // después del moment se agregó como prueba
 
             // Actualizar
             await Remind.updateOne({ _id: rm._id }, {

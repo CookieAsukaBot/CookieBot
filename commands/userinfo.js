@@ -21,7 +21,10 @@ module.exports = {
             let guild = await message.client.guilds.cache.find(g => g.id === message.guild.id);
             let member = await guild.members.cache.find(m => m.id === message.author.id);
 
-            embed.setAuthor(`Info. de ${message.author.tag}`, message.author.displayAvatarURL());
+            embed.setAuthor({
+                name: `Info. de ${message.author.tag}`,
+                iconURL: message.author.displayAvatarURL()
+            });
             embed.addField('ID', `${user.id}`);
 
             if (member.nickname) embed.addField('Apodo', `${member.nickname}`);

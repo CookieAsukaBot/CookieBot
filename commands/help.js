@@ -4,22 +4,22 @@ const prefix = process.env.BOT_PREFIX;
 
 // Agregar comandos en la descripción del Embed
 function addDescription (commands) {
-    let desc = "";
+    let fullDescription = "";
 
     let temporal = [];
     commands.forEach(command => {
         if (command.category) {
             if (!temporal.includes(command.category)) {
                 temporal.push(command.category);
-                desc += `\n**${command.category}**\n`;
+                fullDescription += `\n**${command.category}**\n`;
             }
-            desc += `**${prefix}${command.name}** - ${command.description}\n`;
+            fullDescription += `**${prefix}${command.name}** - ${command.description}\n`;
         } else {
-            desc += `**${prefix}${command.name}** - ${command.description}\n`;
+            fullDescription += `**${prefix}${command.name}** - ${command.description}\n`;
         };
     });
 
-    return desc;
+    return fullDescription;
 };
 
 module.exports = {
@@ -37,8 +37,13 @@ module.exports = {
             let embed = new Discord.MessageEmbed()
                 .setColor(process.env.BOT_COLOR)
                 .setTitle('Lista de comandos')
-                .setAuthor(message.client.user.username, message.client.user.displayAvatarURL())
-                .setFooter(`¡Puedes usar "${prefix}help [nombre del comando]" para obtener ayuda!`);
+                .setAuthor({
+                    name: message.client.user.username,
+                    iconURL: message.client.user.displayAvatarURL()
+                })
+                .setFooter({
+                    text: `¡Puedes usar "${prefix}help [nombre del comando]" para obtener ayuda!`
+                });
 
             // Agregar comandos al Embed
             embed.setDescription(addDescription(commands));
@@ -57,8 +62,13 @@ module.exports = {
         let embed = new Discord.MessageEmbed()
             .setColor(process.env.BOT_COLOR)
             .setTitle(`Comando ${command.name.charAt(0).toUpperCase() + command.name.slice(1)}`)
-            .setAuthor(message.client.user.username, message.client.user.displayAvatarURL())
-            .setFooter(`¡Puedes usar "${prefix}help" para obtener ayuda!`);
+            .setAuthor({
+                name: message.client.user.username,
+                iconURL: message.client.user.displayAvatarURL()
+            })
+            .setFooter({
+                text: `¡Puedes usar "${prefix}help" para obtener ayuda!`
+            });
 
         // Comprobar campos del comando
         if (command.category) embed.addField('Categoría', command.category);
