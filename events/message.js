@@ -77,7 +77,7 @@ module.exports = (bot, config) => {
 
         const now = Date.now();
         const timestamps = bot.cooldowns.get(command.name);
-        const cooldownAmount = command.cooldown * 1000;
+        const cooldownAmount = command.cooldown * 1000; // por 1 segundo
 
         if (timestamps.has(message.author.id)) {
             const expirationTime = timestamps.get(message.author.id) + cooldownAmount;

@@ -154,9 +154,7 @@ module.exports = {
         // Responder
         let embed = new Discord.MessageEmbed()
             .setColor(process.env.BOT_COLOR)
-            // .setTitle('Recordatorio')
-            .setAuthor(`Recordatorio para ${message.author.tag}`, message.author.displayAvatarURL()) // message.author.tag
-            // .setFooter(`¡Gracias por usar nuestro servici🍪!`)
+            .setAuthor(`Recordatorio para ${message.author.tag}`, message.author.displayAvatarURL())
             .setDescription(`💌 Se ha guardado tu recordatorio, te lo recordaré **${setDate.fromNow()}**.`);
 
         await message.channel.send({ embeds: [embed] });
