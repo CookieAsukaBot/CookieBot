@@ -1,4 +1,3 @@
-module.exports = (bot) => {
-    // Iniciar sesión
-    bot.login(process.env.BOT_TOKEN);
+module.exports = async (bot) => {
+    await bot.login(process.env.BOT_TOKEN);
 };

@@ -33,24 +33,15 @@ bot.prefix = process.env.BOT_PREFIX;
 // Cargar comandos
 const commandPath = path.join(__dirname, 'commands');
 
+// Eventos
+const events = async () => {
+    await require('./events/commands')(bot, commandPath);
+    await require('./plugins/index')(bot);
+    await require('./events/login')(bot);
+    await require('./events/ready')(bot);
+    await require('./events/message')(bot, config);
+    await require('./events/reminders')(bot);
+    // require('./events/guildMember')(bot);
+};
 
-// Commands
-require('./events/commands')(bot, commandPath);
-
-// Ready
-require('./events/ready')(bot);
-
-// guildAddMember / guildRemoveMember
-// require('./events/guildMember')(bot);
-
-// Message
-require('./events/message')(bot, config);
-
-// Login
-require('./events/login')(bot);
-
-// Reminders
-require('./events/reminders')(bot);
-
-// Plugins
-require('./plugins/index')(bot);
+events();
