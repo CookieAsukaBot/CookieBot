@@ -1,5 +1,4 @@
 const fs = require('node:fs');
-const { SlashCommandBuilder } = require('@discordjs/builders');
 
 const addPluginCommands = async (plugins) => {
     let commands = [];
@@ -7,11 +6,11 @@ const addPluginCommands = async (plugins) => {
     await plugins.forEach(async plugin => {
         let indexPath = `./plugins/${plugin}/index.js`;
         let slashPath = `./plugins/${plugin}/slash-commands`;
-        if (!fs.existsSync(indexPath) && !fs.existsSync(slashPath)) return commands;
+        if (!fs.existsSync(indexPath) || !fs.existsSync(slashPath)) return;
 
         try {
             let index = await require(`../plugins/${plugin}/index.js`);
-            if (!index.plugin || index.enabled != undefined && index.enabled == false) return commands;
+            if (!index.plugin || index.enabled != undefined && index.enabled == false) return;
 
             let slashCommands = fs.readdirSync(slashPath).filter(file => file.endsWith('.js'));
 
@@ -29,15 +28,15 @@ const addPluginCommands = async (plugins) => {
 };
 
 module.exports = {
-	data: new SlashCommandBuilder()
-		.setName('deploy')
-		.setDescription('Actualiza o carga la lista de comandos.'),
-	async execute(interaction, bot) {
+	name: 'deploy',
+    description: 'Actualiza o carga la lista de comandos slash.',
+    roles: ["admin"], // Lo ideal es que requiera de un user id para funcionar, ya que, en cualquier servidor pueden spamearlo.
+	async execute(message, args, bot) {
         let commands = [];
-        let commandFiles = fs.readdirSync(__dirname).filter(file => file.endsWith('.js'));
+        let commandFiles = fs.readdirSync('./slash-commands').filter(file => file.endsWith('.js'));
 
         for (const file of commandFiles) {
-            const command = require(`${__dirname}/${file}`);
+            const command = require(`../slash-commands/${file}`);
             commands.push(command.data.toJSON());
         };
 
@@ -46,9 +45,8 @@ module.exports = {
 
         await require('../events/deploySlashCommands')(bot, commands);
 
-        return interaction.reply({
-            content: '¡Se ha cargado la lista de comandos correctamente! uwu ✅☑',
-            ephemeral: true
+        message.reply({
+            content: 'se cargó la lista de comandos correctamente! ✅',
         });
 	},
 };
