@@ -11,10 +11,17 @@ module.exports = async (bot, commands) => {
     try {
         console.log('[SLASH-COMMANDS] Cargando comandos...');
 
-        await rest.put(
-            Routes.applicationGuildCommands(clientId, guildId),
-            { body: commands },
-        );
+        if (process.env.DEV_MODE == true) {
+            await rest.put(
+                Routes.applicationGuildCommands(clientId, guildId),
+                { body: commands },
+            );
+        } else {
+            await rest.put(
+                Routes.applicationCommands(clientId),
+                { body: commands },
+            );            
+        };
 
         console.log('[SLASH-COMMANDS] Se han cargado los comandos correctamente.');
     } catch (error) {

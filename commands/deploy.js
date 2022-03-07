@@ -30,8 +30,10 @@ const addPluginCommands = async (plugins) => {
 module.exports = {
 	name: 'deploy',
     description: 'Actualiza o carga la lista de comandos slash.',
-    roles: ["admin"], // Lo ideal es que requiera de un user id para funcionar, ya que, en cualquier servidor pueden spamearlo.
+    roles: ["admin"],
 	async execute(message, args, bot) {
+        if (process.env.OWNER_ID !== message.author.id) return;
+
         let commands = [];
         let commandFiles = fs.readdirSync('./slash-commands').filter(file => file.endsWith('.js'));
 
