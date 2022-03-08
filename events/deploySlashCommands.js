@@ -20,7 +20,7 @@ module.exports = async (bot, commands) => {
             await rest.put(
                 Routes.applicationCommands(clientId),
                 { body: commands },
-            );            
+            );
         };
 
         console.log('[SLASH-COMMANDS] Se han cargado los comandos correctamente.');
