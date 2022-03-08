@@ -1,5 +1,5 @@
 const { Client, Intents, Collection } = require('discord.js');
-const path = require('path');
+const path = require('node:path');
 
 // Cliente
 const bot = new Client({
@@ -24,15 +24,15 @@ const bot = new Client({
 
 // Configuración
 const config = require('./config.json');
+bot.prefix = process.env.BOT_PREFIX;
 
 // Guardar comandos
 bot.commands = new Collection();
 bot.cooldowns = new Collection();
-bot.prefix = process.env.BOT_PREFIX;
+bot.slashCommands = new Collection();
 
 // Cargar comandos
 const commandPath = path.join(__dirname, 'commands');
-const slashCommandPath = path.join(__dirname, 'slash-commands');
 
 // Eventos
 const events = async () => { // remover await innecesarios
