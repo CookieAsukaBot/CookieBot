@@ -1,8 +1,6 @@
 const fs = require('node:fs');
 
 module.exports = async (bot) => {
-    if (!process.env.GUILD_ID) return;
-
     const commandFiles = fs.readdirSync('./slash-commands')
         .filter(file => file.endsWith('.js'));
 
