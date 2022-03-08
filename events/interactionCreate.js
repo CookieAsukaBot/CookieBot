@@ -1,9 +1,7 @@
 const fs = require('node:fs');
-const { Collection } = require("discord.js");
 
 module.exports = async (bot) => {
     if (!process.env.GUILD_ID) return;
-    bot.slashCommands = new Collection();
 
     const commandFiles = fs.readdirSync('./slash-commands')
         .filter(file => file.endsWith('.js'));
