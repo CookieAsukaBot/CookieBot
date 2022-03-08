@@ -1,4 +1,5 @@
 const fs = require('node:fs');
+const Discord = require('discord.js');
 
 const addPluginCommands = async (plugins) => {
     let commands = [];
@@ -31,6 +32,7 @@ module.exports = {
 	name: 'deploy',
     description: 'Actualiza o carga la lista de comandos slash.',
     roles: ["admin"],
+    cooldown: 10,
 	async execute(message, args, bot) {
         if (process.env.OWNER_ID !== message.author.id) return;
 
@@ -47,8 +49,16 @@ module.exports = {
 
         await require('../events/deploySlashCommands')(bot, commands);
 
+        let embed = new Discord.MessageEmbed()
+            .setColor(process.env.BOT_COLOR)
+            .setAuthor({
+                name: 'Comandos Slash',
+                iconURL: bot.user.displayAvatarURL({ dynamic: true, size: 256 })
+            })
+            .setDescription("Se cargó la lista de **/comandos** correctamente. ✅");
+
         message.reply({
-            content: 'se cargó la lista de comandos correctamente! ✅',
+            embeds: [embed]
         });
 	},
 };
