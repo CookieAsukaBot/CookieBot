@@ -35,13 +35,12 @@ bot.slashCommands = new Collection();
 const commandPath = path.join(__dirname, 'commands');
 
 // Eventos
-const events = async () => { // remover await innecesarios
+const events = async () => { // todo: remover await innecesarios?
     await require('./events/commands')(bot, commandPath);
     await require('./events/login')(bot);
     await require('./events/ready')(bot);
     await require('./events/message')(bot, config);
     await require('./events/interactionCreate')(bot);
-    await require('./events/reminders')(bot);
     await require('./plugins/index')(bot);
     // require('./events/guildMember')(bot);
 };

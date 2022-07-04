@@ -5,4 +5,4 @@ require('dotenv').config();
 require('./bot');
 
 // MongoDB
-require('./database/database');
+require('./database/mongodb');
