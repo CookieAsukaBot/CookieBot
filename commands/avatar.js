@@ -1,36 +1,35 @@
-const getAvatar = (user) => {
-    // If true, the format will dynamically change to gif for animated avatars; the default is false.
-    return fixExtension(user.displayAvatarURL({ dynamic: true, size: 4096 }));
-};
-
 const fixExtension = (url) => {
-    if (url.includes("webp")) {
-        return url.replace("webp", "png");
-    } else {
-        return url;
-    };
-};
+    return url.includes("webp") ? url.replace("webp", "png") : url;
+}
+
+const getAvatar = (user) => {
+    return fixExtension(user.displayAvatarURL({
+        dynamic: true,
+        size: 4096
+    }));
+}
 
 module.exports = {
 	name: 'avatar',
+    category: 'General',
     description: 'Muestra tu avatar o el de la persona mencionada.',
-    usage: '(mención del usuario opcional)',
+    usage: '<@usuario>',
 	execute(message) {
         // Si no hay una mención
         if (!message.mentions.users.size) {
-            return message.reply({
-                content: `Avatar de ${message.author.tag}: ${getAvatar(message.author)}`
+            return message.channel.send({
+                content: `**${message.author.username}**, avatar de ${message.author.tag}:\n${getAvatar(message.author)}`
             });
-        };
+        }
 
         // Por cada mención
         let avatarList = message.mentions.users.map(user => {
-            return `Avatar de ${user.tag}: ${getAvatar(user)}`;
+            return `Avatar de ${user.tag}:\n${getAvatar(user)}`; // todo: tiene que haber un máximo de menciones ya que Discord no tiene caracteres infinitos (con un index)
         });
 
         // Responder
-        message.reply({
-            content: `${avatarList.join(",").replaceAll(",", "\n")}`
+        message.channel.send({
+            content: `**${message.author.username}**,\n${avatarList.join(",").replaceAll(",", "\n")}`
         });
 	},
-};
+}

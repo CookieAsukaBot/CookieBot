@@ -9,15 +9,9 @@ module.exports = (bot, config) => {
     const modPermissions = config.commands.permissions.mod;
 
     bot.on('messageCreate', async message => {
-        // Si el mensaje no empieza con el prefix || si el mensaje es de un bot => no avanza el código (return)
+        // Captar solo comandos
         if (!message.content.startsWith(prefix) || message.author.bot) return;
-        // Comprobar si el mensaje se envió en el servidor
         if (message.channel.type === "dm") return;
-        // Abajo de if (!command) return
-        // guildOnly option
-        // if (command.guildOnly && message.channel.type !== 'text') {
-        //     return message.message.reply({ content: '¡No puedes usar comandos por mensajes privados!' });
-        // };
 
         // Argumentos / Comando
         const args = message.content.slice(prefix.length).split(/ +/);
@@ -28,6 +22,11 @@ module.exports = (bot, config) => {
                         bot.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
         // Si el comando no existe, no se continúa
         if (!command) return;
+        // Abajo de if (!command) return
+        // guildOnly option
+        // if (command.guildOnly && message.channel.type !== 'text') {
+        //     return message.message.channel.send({ content: '¡No puedes usar comandos por mensajes privados! });
+        // }
 
         // Comprobar si el comando requiere permisos
         if (command.roles) {
@@ -42,38 +41,41 @@ module.exports = (bot, config) => {
             if (command.roles.some(r => adminPermissions.includes(r))) {
                 // Verificar usuario
                 if (message.member.roles.cache.some(r => adminPermissions.includes(r.name))) hasPermissions = true;
-            };
+            }
 
             // Requiere mod
             // Si el usuario tiene un role de modPermissions
             if (command.roles.some(r => modPermissions.includes(r))) {
                 // Verificar usuario
                 if (message.member.roles.cache.some(r => modPermissions.includes(r.name))) hasPermissions = true;
-            };
+            }
 
             // Comprobar si tiene permisos
             // Si el usuario no tiene permisos, no se continúa
-            if (!hasPermissions) return message.reply({ content: '¡No tienes permisos!' });
-        };
+            if (!hasPermissions) return message.channel.send({
+                content: `¡**${message.author.username}**, no tienes permisos!`
+            });
+        }
 
         // Comprobar si requiere de args y el usuario no usó args
         if (command.args && !args.length) {
-            let reply = `Este comando requiere de "argumento(s)", ${message.author}!`;
+            let reply = `¡**${message.author.username}**, este comando requiere de "argumento(s)"!`;
 
             // Si el comando tiene un ejemplo de uso
             if (command.usage) {
                 reply += `\nEjemplo de su uso: \`${prefix}${command.name} ${command.usage}\``;
-            };
+            }
 
-            // Envía el mensaje
-            return message.reply({ content: reply });
-        };
+            return message.channel.send({
+                content: reply
+            });
+        }
 
         // Sitema de cooldownds
         // https://web.archive.org/web/20200813031659/https://discordjs.guide/command-handling/adding-features.html
         if (!bot.cooldowns.has(command.name)) {
             bot.cooldowns.set(command.name, new Collection());
-        };
+        }
 
         const now = Date.now();
         const timestamps = bot.cooldowns.get(command.name);
@@ -84,18 +86,18 @@ module.exports = (bot, config) => {
 
             if (now < expirationTime) {
                 const timeLeft = (expirationTime - now) / 1000;
-                return message.reply(`espera ${timeLeft.toFixed(1)} segundo(s) para volver a usar \`${command.name}\`.`);
-            };
-        };
+                return message.channel.send(`**${message.author.username}**, espera ${timeLeft.toFixed(1)} segundo(s) para volver a usar \`${command.name}\`.`);
+            }
+        }
 
         // Intentar ejecutar el comando
         try {
             timestamps.set(message.author.id, now);
             setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
             await command.execute(message, args, bot);
-        } catch (err) {
-            console.error(err);
-            message.reply('ocurrió un error al intentar usar el comando!');
-        };
+        } catch (error) {
+            console.error(error);
+            message.channel.send(`¡**${message.author.username}**, ocurrió un error al intentar usar el comando!`);
+        }
     });
-};
+}

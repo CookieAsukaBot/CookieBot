@@ -1,16 +1,15 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 
 const fixExtension = (url) => {
-	if (url.includes("webp")) {
-		return url.replace("webp", "png");
-	} else {
-		return url;
-	};
-};
+    return url.includes("webp") ? url.replace("webp", "png") : url;
+}
 
 const getAvatar = (user) => {
-    return fixExtension(user.displayAvatarURL({ dynamic: true, size: 4096 }));
-};
+    return fixExtension(user.displayAvatarURL({
+		dynamic: true,
+		size: 4096
+	}));
+}
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -22,8 +21,8 @@ module.exports = {
 
 		if (!user) {
 			return interaction.reply(`Tu avatar: ${getAvatar(interaction.user)}`);
-		};
+		}
 
-		return interaction.reply(`Avatar de ${user.tag}: ${getAvatar(user)}`);
+		return interaction.reply(`Avatar de ${user.tag}:\n${getAvatar(user)}`);
 	},
-};
+}

@@ -18,18 +18,19 @@ const addPluginCommands = async (plugins) => {
             for (const file of slashCommands) {
                 const command = require(`../plugins/${plugin}/slash-commands/${file}`);
                 commands.push(command.data.toJSON());
-            };
+            }
         } catch (error) {
             console.error(error);
             return commands;
-        };
+        }
     });
 
     return commands;
-};
+}
 
 module.exports = {
 	name: 'deploy',
+    category: 'General',
     description: 'Actualiza o carga la lista de comandos slash.',
     roles: ["admin"],
     cooldown: 10,
@@ -42,7 +43,7 @@ module.exports = {
         for (const file of commandFiles) {
             const command = require(`../slash-commands/${file}`);
             commands.push(command.data.toJSON());
-        };
+        }
 
         let plugins = fs.readdirSync('./plugins').filter(folder => !folder.endsWith('.js'));
         if (plugins.length > 0) (await addPluginCommands(plugins)).forEach(command => commands.push(command));
@@ -57,8 +58,8 @@ module.exports = {
             })
             .setDescription("Se cargó la lista de **/comandos** correctamente. ✅");
 
-        message.reply({
+        message.channel.send({
             embeds: [embed]
         });
 	},
-};
+}

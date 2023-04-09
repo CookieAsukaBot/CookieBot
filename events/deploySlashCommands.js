@@ -21,11 +21,11 @@ module.exports = async (bot, commands) => {
                 Routes.applicationCommands(clientId),
                 { body: commands },
             );
-        };
+        }
 
         console.log('[SLASH-COMMANDS] Se han cargado los comandos correctamente.');
     } catch (error) {
         console.error(error);
         console.log('[SLASH-COMMANDS] Ocurrió un error al cargar los comandos.');
-    };
-};
+    }
+}

@@ -1,6 +1,6 @@
 module.exports = (bot) => {
     bot.on('ready', () => {
-        console.log(`[BOT] [${process.env.BOT_NAME || "BOT"}] Se ha conectado a Discord.`);
+        console.log(`[BOT] [${process.env.BOT_NAME || "BOT"}] Se conectó a Discord.`);
     });
 
     bot.user.setPresence({
@@ -10,4 +10,4 @@ module.exports = (bot) => {
             name: process.env.BOT_ACTIVITY || "Cookies"
         }]
     });
-};
+}

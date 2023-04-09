@@ -1,6 +1,7 @@
 module.exports = {
     name: 'say',
-    description: 'Lo que agregues como mensaje lo diré por ti!',
+    category: 'General',
+    description: 'Lo que agregues como mensaje lo diré por ti.',
     roles: ['admin'],
     usage: '[mensaje]',
     execute(message, args) {
@@ -11,13 +12,18 @@ module.exports = {
         let msg = args.join(' ');
 
         // Eliminar mensaje
-        message.delete();
+        // todo: si el bot no tiene permisos esto crash
+        try {
+            message.delete();
+        } catch (error) {}
 
         // Mostrar por consola
-        let showConsole = `[${message.channel.guild.name}][#${message.channel.name}][!say][${message.author.tag}] ${msg}`;
+        let showConsole = `[${message.channel.guild.name}][#${message.channel.name}][${process.env.prefix}${this.name}][${message.author.tag}] ${msg}`;
         console.log(showConsole); // opcional?
 
         // Enviar mensaje
-        message.channel.send({ content: msg });
+        message.channel.send({
+            content: msg
+        });
     }
-};
+}

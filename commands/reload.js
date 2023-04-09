@@ -1,5 +1,6 @@
 module.exports = {
 	name: 'reload',
+    category: 'General',
     description: 'Recarga un comando.',
     roles: ['admin', 'mod'],
     usage: '<comando>',
@@ -37,6 +38,6 @@ module.exports = {
             message.channel.send({
                 content: `Ocurrió un error al volver a cargar el comando \`${commandName}\`.`
             });
-        };
+        }
 	}
-};
+}

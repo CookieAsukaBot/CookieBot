@@ -16,14 +16,15 @@ function addDescription (commands) {
             fullDescription += `**${prefix}${command.name}** - ${command.description}\n`;
         } else {
             fullDescription += `**${prefix}${command.name}** - ${command.description}\n`;
-        };
+        }
     });
 
     return fullDescription;
-};
+}
 
 module.exports = {
     name: 'help',
+    category: 'General',
     description: 'Muestra todos los comandos e información.',
     aliases: ['commands', 'ayuda', 'comandos'],
     usage: '[nombre del comando]',
@@ -36,7 +37,7 @@ module.exports = {
             // Embed
             let embed = new Discord.MessageEmbed()
                 .setColor(process.env.BOT_COLOR)
-                .setTitle('Lista de comandos')
+                .setTitle('📚 Lista de comandos')
                 .setAuthor({
                     name: message.client.user.username,
                     iconURL: message.client.user.displayAvatarURL()
@@ -49,15 +50,19 @@ module.exports = {
             embed.setDescription(addDescription(commands));
 
             // Responder
-            return message.reply({ embeds: [embed] });
-        };
+            return message.channel.send({
+                embeds: [embed]
+            });
+        }
 
         // Buscar por comando
         const name = args[0].toLowerCase();
         const command = commands.get(name) || commands.find(c => c.aliases && c.aliases.includes(name));
 
         // Si no se encuentra
-        if (!command) return message.reply({ content: `No se encontró el comando \`${name}\`!` });
+        if (!command) return message.channel.send({
+            content: `¡**${message.author.username}**, no se encontró el comando \`${name}\`!`
+        });
 
         let embed = new Discord.MessageEmbed()
             .setColor(process.env.BOT_COLOR)
@@ -78,6 +83,8 @@ module.exports = {
         if (command.usage) embed.addField('Ejemplo', `${prefix}${command.name} ${command.usage}`);
 
         // Responder
-        message.reply({ embeds: [embed] });
+        message.channel.send({
+            embeds: [embed]
+        });
     }
-};
+}

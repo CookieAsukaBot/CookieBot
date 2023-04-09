@@ -8,8 +8,8 @@ function moduleIsAvailable (dependencie) {
         return true;
     } catch (e) {
         return false;
-    };
-};
+    }
+}
 
 async function installModules (plugin) {
     // Obtener datos
@@ -22,7 +22,7 @@ async function installModules (plugin) {
     try {
         await modules.forEach(async dependencie => {
             // Comprobar si está instalada
-            if (moduleIsAvailable(dependencie)) {
+            if (moduleIsAvailable(dependencie)) { // todo: split para detectar si contine una versión
                 // Agregar localmente
                 installed.push(dependencie);
                 return console.log(`[PLUGINS] [${name.toUpperCase()}] La dependencia ${dependencie.toUpperCase()} ya está instalada.`);
@@ -31,15 +31,15 @@ async function installModules (plugin) {
                 const status = await installDependencie(dependencie, name);
                 if (status == false) return console.log(`[PLUGINS] [${name.toUpperCase()}] Ocurrió un error al intentar comprobar/instalar [${dependencie.toUpperCase()}].`);
                 return console.log(`[PLUGINS] [${name.toUpperCase()}] Se instaló de la dependencia [${dependencie.toUpperCase()}]. Se requiere de reiniciar el BOT para funcionar.`);
-            };
+            }
         });
     } catch (err) {
         console.log(`[PLUGINS] [${name.toUpperCase()}] Ocurrió un error al intentar comprobar/instalar dependencias.`);
-    };
+    }
 
     // Se devuélve la lista de plugins ya instalados
     return installed;
-};
+}
 
 function installDependencie (dependencie, name) {
     try {
@@ -50,8 +50,8 @@ function installDependencie (dependencie, name) {
         console.log(`[PLUGINS] [${name.toUpperCase()}] Ocurrió un error al intentar instalar la dependencia ${dependencie.toUpperCase()}.`);
         console.error(error);
         return false;
-    };
-};
+    }
+}
 
 module.exports = (bot) => {
     // Obtener plugins
@@ -100,14 +100,14 @@ module.exports = (bot) => {
                     await index.plugin(bot);                    
                 } else {
                     console.log(`[PLUGINS] [${plugin.toUpperCase()}] Se requiere de instalar dependencias.`);
-                };
+                }
             } else {
                 // Iniciar plugin
                 await index.plugin(bot);
-            };
-        } catch (err) {
+            }
+        } catch (error) {
             console.log(`[PLUGIN] [${plugin.toUpperCase()}] Ocurrió un error.`);
-            console.error(err);
-        };
+            console.error(error);
+        }
     });
-};
+}

@@ -6,4 +6,4 @@ module.exports = (bot, config) => {
     // Se fue del servidor
     bot.on("guildMemberRemove", async (member) => {
     });
-};
+}

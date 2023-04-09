@@ -1,7 +1,10 @@
 module.exports = {
 	name: 'ping',
-	description: 'Ping!',
+	category: 'General',
+	description: 'Ping.',
 	execute (message) {
-		message.reply({ content: 'Pong.' });
+		message.channl.send({
+			content: 'Pong!'
+		});
 	}
-};
+}

@@ -7,7 +7,7 @@ module.exports = async (bot) => {
     for (const file of commandFiles) {
         const command = require(`../slash-commands/${file}`);
         await bot.slashCommands.set(command.data.name, command);
-    };
+    }
 
     bot.on('interactionCreate', async interaction => {
         if (!interaction.isCommand()) return;
@@ -23,6 +23,6 @@ module.exports = async (bot) => {
                 content: "¡Ocurrió un error al usar el comando! Intenta de nuevo o reporta el error.",
                 ephemeral: true
             });
-        };
+        }
     });
-};
+}
