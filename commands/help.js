@@ -35,7 +35,7 @@ module.exports = {
         // Si no hay args
         if (!args.length) {
             // Embed
-            let embed = new Discord.MessageEmbed()
+            let embed = new Discord.EmbedBuilder()
                 .setColor(process.env.BOT_COLOR)
                 .setTitle('📚 Lista de comandos')
                 .setAuthor({
@@ -64,7 +64,7 @@ module.exports = {
             content: `¡**${message.author.username}**, no se encontró el comando \`${name}\`!`
         });
 
-        let embed = new Discord.MessageEmbed()
+        let embed = new Discord.EmbedBuilder()
             .setColor(process.env.BOT_COLOR)
             .setTitle(`Comando ${command.name.charAt(0).toUpperCase() + command.name.slice(1)}`)
             .setAuthor({
@@ -76,11 +76,11 @@ module.exports = {
             });
 
         // Comprobar campos del comando
-        if (command.category) embed.addField('Categoría', command.category);
-        if (command.roles) embed.addField('Permisos', command.roles.join(', '));
-        if (command.aliases) embed.addField('Alternativas', command.aliases.join(', '));
-        if (command.description) embed.addField('Descripción', command.description);
-        if (command.usage) embed.addField('Ejemplo', `${prefix}${command.name} ${command.usage}`);
+        if (command.category) embed.addFields({ name: 'Categoría', value: command.category });
+        if (command.roles) embed.addFields({ name: 'Permisos', value: command.roles.join(', ') });
+        if (command.aliases) embed.addFields({ name: 'Alternativas', value: command.aliases.join(', ') });
+        if (command.description) embed.addFields({ name: 'Descripción', value: command.description });
+        if (command.usage) embed.addFields({ name: 'Ejemplo', value: `${prefix}${command.name} ${command.usage}` });
 
         // Responder
         message.channel.send({

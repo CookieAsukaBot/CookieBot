@@ -50,7 +50,7 @@ module.exports = {
 
         await require('../events/deploySlashCommands')(bot, commands);
 
-        let embed = new Discord.MessageEmbed()
+        let embed = new Discord.EmbedBuilder()
             .setColor(process.env.BOT_COLOR)
             .setAuthor({
                 name: 'Comandos Slash',
