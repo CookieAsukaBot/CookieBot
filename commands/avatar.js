@@ -18,7 +18,7 @@ module.exports = {
         // Si no hay una mención
         if (!message.mentions.users.size) {
             return message.channel.send({
-                content: `**${message.author.username}**, avatar de ${message.author.tag}:\n${getAvatar(message.author)}`
+                content: `**${message.author.globalName}**, avatar de ${message.author.username}:\n${getAvatar(message.author)}`
             });
         }
 
@@ -29,7 +29,7 @@ module.exports = {
 
         // Responder
         message.channel.send({
-            content: `**${message.author.username}**,\n${avatarList.join(",").replaceAll(",", "\n")}`
+            content: `**${message.author.globalName}**,\n${avatarList.join(",").replaceAll(",", "\n")}`
         });
 	},
 }

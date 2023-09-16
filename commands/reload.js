@@ -8,7 +8,7 @@ module.exports = {
 	execute (message, args) {
         // Si no hay args
         if (!args[0]) return message.channel.send({
-            content: `**${message.author.username}**, no has mencionado qué comando recargar!`
+            content: `**${message.author.globalName}**, no has mencionado qué comando recargar!`
         });
 
         // Buscar comando
@@ -17,7 +17,7 @@ module.exports = {
 
         // Si el comando no existe
         if (!command) return message.channel.send({
-            content: `**${message.author.username}**, no se encontró el comando \`${command.name}\``
+            content: `**${message.author.globalName}**, no se encontró el comando \`${command.name}\``
         });
 
         // Cargar comando

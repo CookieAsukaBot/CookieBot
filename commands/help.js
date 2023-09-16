@@ -61,7 +61,7 @@ module.exports = {
 
         // Si no se encuentra
         if (!command) return message.channel.send({
-            content: `¡**${message.author.username}**, no se encontró el comando \`${name}\`!`
+            content: `¡**${message.author.globalName}**, no se encontró el comando \`${name}\`!`
         });
 
         let embed = new Discord.EmbedBuilder()

@@ -18,7 +18,7 @@ module.exports = {
         } catch (error) {}
 
         // Mostrar por consola
-        let showConsole = `[${message.channel.guild.name}][#${message.channel.name}][${process.env.prefix}${this.name}][${message.author.tag}] ${msg}`;
+        let showConsole = `[${message.channel.guild.name}][#${message.channel.name}][${process.env.prefix}${this.name}][${message.author.username}] ${msg}`;
         console.log(showConsole); // opcional?
 
         // Enviar mensaje

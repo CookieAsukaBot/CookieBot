@@ -11,11 +11,11 @@ module.exports = {
 
         // Comprobar valores
         if (isNaN(amount)) return message.channel.send({
-            content: `**${message.author.username}**, se require de números!`
+            content: `**${message.author.globalName}**, se require de números!`
         });
 
         if (amount <= 1 || amount > 100) return message.channel.send({
-            content: `**${message.author.username}**, se requiere de un valor del 1 al 99.` // todo: redacción?
+            content: `**${message.author.globalName}**, se requiere de un valor del 1 al 99.` // todo: redacción?
         });
 
         // Eliminar mensajes
@@ -23,7 +23,7 @@ module.exports = {
             .catch(error => {
                 console.error(error);
                 message.channel.send({
-                    content: `¡**${message.author.username}**, ocurrió un error al intentar de eliminar mensajes en este canal!`
+                    content: `¡**${message.author.globalName}**, ocurrió un error al intentar de eliminar mensajes en este canal!`
                 });
             });
 	}

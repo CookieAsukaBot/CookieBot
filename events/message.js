@@ -53,13 +53,13 @@ module.exports = (bot, config) => {
             // Comprobar si tiene permisos
             // Si el usuario no tiene permisos, no se continúa
             if (!hasPermissions) return message.channel.send({
-                content: `¡**${message.author.username}**, no tienes permisos!`
+                content: `¡**${message.author.globalName}**, no tienes permisos!`
             });
         }
 
         // Comprobar si requiere de args y el usuario no usó args
         if (command.args && !args.length) {
-            let reply = `¡**${message.author.username}**, este comando requiere de "argumento(s)"!`;
+            let reply = `¡**${message.author.globalName}**, este comando requiere de "argumento(s)"!`;
 
             // Si el comando tiene un ejemplo de uso
             if (command.usage) {
@@ -86,7 +86,7 @@ module.exports = (bot, config) => {
 
             if (now < expirationTime) {
                 const timeLeft = (expirationTime - now) / 1000;
-                return message.channel.send(`**${message.author.username}**, espera ${timeLeft.toFixed(1)} segundo(s) para volver a usar \`${command.name}\`.`);
+                return message.channel.send(`**${message.author.globalName}**, espera ${timeLeft.toFixed(1)} segundo(s) para volver a usar \`${command.name}\`.`);
             }
         }
 
@@ -97,7 +97,7 @@ module.exports = (bot, config) => {
             await command.execute(message, args, bot);
         } catch (error) {
             console.error(error);
-            message.channel.send(`¡**${message.author.username}**, ocurrió un error al intentar usar el comando!`);
+            message.channel.send(`¡**${message.author.globalName}**, ocurrió un error al intentar usar el comando!`);
         }
     });
 }
