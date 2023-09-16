@@ -23,6 +23,6 @@ module.exports = {
 			return interaction.reply(`Tu avatar: ${getAvatar(interaction.user)}`);
 		}
 
-		return interaction.reply(`Avatar de ${user.tag}:\n${getAvatar(user)}`);
+		return interaction.reply(`Avatar de ${user.username}:\n${getAvatar(user)}`);
 	},
 }
