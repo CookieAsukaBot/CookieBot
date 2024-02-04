@@ -20,9 +20,15 @@ module.exports = {
 		const user = interaction.options.getUser('target');
 
 		if (!user) {
-			return interaction.reply(`Tu avatar: ${getAvatar(interaction.user)}`);
+			return interaction.reply({
+				content: `Tu avatar:`,
+				files: [getAvatar(interaction.user)]
+			});
 		}
 
-		return interaction.reply(`Avatar de ${user.username}:\n${getAvatar(user)}`);
+		return interaction.reply({
+			content: `Avatar de ${user.username}:`,
+			files: [getAvatar(user)]
+		});
 	},
 }

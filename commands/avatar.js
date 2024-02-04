@@ -12,24 +12,34 @@ const getAvatar = (user) => {
 module.exports = {
 	name: 'avatar',
     category: 'General',
-    description: 'Muestra tu avatar o el de la persona mencionada.',
+    description: 'Muestra tu avatar o de las personas mencionadas.',
     usage: '<@usuario>',
-	execute(message) {
+	async execute(message) {
+        let mentions = message.mentions.users; // todo: limitar cantidad de menciones
+        let avatars = [];
+        let users = [];
+
         // Si no hay una mención
-        if (!message.mentions.users.size) {
+        if (!mentions.size) {
+            avatars.push(getAvatar(message.author))
             return message.channel.send({
-                content: `**${message.author.globalName}**, avatar de ${message.author.username}:\n${getAvatar(message.author)}`
+                content: `**${message.author.globalName}**, avatar de ${message.author.username}:`,
+                files: avatars
             });
         }
 
         // Por cada mención
-        let avatarList = message.mentions.users.map(user => {
-            return `Avatar de ${user.tag}:\n${getAvatar(user)}`; // todo: tiene que haber un máximo de menciones ya que Discord no tiene caracteres infinitos (con un index)
+        await mentions.forEach(user => {
+            users.push(user.tag);
+            avatars.push(getAvatar(user));
         });
+
+        let usersLists = users.map(user => `:arrow_right: **${user}**\n`).join('');
 
         // Responder
         message.channel.send({
-            content: `**${message.author.globalName}**,\n${avatarList.join(",").replaceAll(",", "\n")}`
+            content: `**${message.author.globalName}**, avatares:\n${usersLists}`,
+            files: avatars
         });
 	},
 }
