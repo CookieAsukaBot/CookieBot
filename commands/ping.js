@@ -3,8 +3,8 @@ module.exports = {
 	category: 'General',
 	description: 'Ping.',
 	execute (message) {
-		message.channl.send({
-			content: 'Pong!'
+		message.channel.send({
+			content: `**Pong**!`
 		});
 	}
 }
